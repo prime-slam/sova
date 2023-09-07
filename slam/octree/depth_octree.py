@@ -174,7 +174,7 @@ class DepthOctreeNode:
             if child is None:
                 continue
 
-            point_cloud += child.get_colored(depth - 1)
+            point_cloud += child.get_colorized(depth - 1)
 
         return point_cloud
 
