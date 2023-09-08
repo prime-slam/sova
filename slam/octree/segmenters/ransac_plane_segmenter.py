@@ -1,10 +1,10 @@
 import numpy as np
 import open3d as o3d
 
-from slam.typing.hints import ArrayNx3
-from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenters
 from typing import List
 
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenters
+from slam.typing.hints import ArrayNx3
 
 __all__ = ["RansacPlaneSegmenter"]
 

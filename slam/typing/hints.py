@@ -1,6 +1,7 @@
-from typing import Annotated, Literal, TypeVar
-import numpy.typing as npt
 import numpy as np
+import numpy.typing as npt
+
+from typing import Annotated, Literal, TypeVar
 
 __all__ = [
     "Array3",

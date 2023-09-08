@@ -1,5 +1,6 @@
 import slam.octree.base_octree
-from slam.octree.base_octree import *
+import slam.octree.depth_octree
 
-import slam.octree.segmentaters.ransac_plane_segmentater
-from slam.octree.segmentaters.ransac_plane_segmentater import *
+from slam.octree.base_octree import *
+from slam.octree.depth_octree import *
+from slam.octree.segmenters import base_plane_segmenter, ransac_plane_segmenter

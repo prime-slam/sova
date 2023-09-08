@@ -1,12 +1,12 @@
 import numpy as np
 import open3d as o3d
+
 import random
-
 from typing import Optional
-from slam.octree.base_octree import Octree
-from slam.typing.hints import ArrayNx8, Array3, ArrayNx3
-from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
 
+from slam.octree.base_octree import Octree
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
+from slam.typing.hints import Array3, ArrayNx3, ArrayNx8
 
 __all__ = ["DepthOctree", "DepthOctreeNode"]
 

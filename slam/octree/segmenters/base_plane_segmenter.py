@@ -1,9 +1,9 @@
 import numpy as np
 
-from abc import abstractmethod, ABC
-from slam.typing.hints import ArrayNx3
+from abc import ABC, abstractmethod
 from typing import List
 
+from slam.typing.hints import ArrayNx3
 
 __all__ = ["PlaneSegmenters"]
 

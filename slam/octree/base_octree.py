@@ -1,7 +1,8 @@
-from abc import abstractmethod, ABC
 import open3d as o3d
-from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
 
+from abc import ABC, abstractmethod
+
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
 
 __all__ = ["Octree"]
 
