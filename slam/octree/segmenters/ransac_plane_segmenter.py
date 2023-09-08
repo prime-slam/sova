@@ -2,14 +2,14 @@ import numpy as np
 import open3d as o3d
 
 from slam.typing.hints import ArrayNx3
-from slam.octree.segmentaters.base_plane_segmentater import PlaneSegmentater
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenters
 from typing import List
 
 
-__all__ = ["RansacPlaneSegmentater"]
+__all__ = ["RansacPlaneSegmenter"]
 
 
-class RansacPlaneSegmentater(PlaneSegmentater):
+class RansacPlaneSegmenter(PlaneSegmenters):
     """
     Represent RANSAC-based mechanism to segment planes
 

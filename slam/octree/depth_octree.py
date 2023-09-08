@@ -5,7 +5,7 @@ import random
 from typing import Optional
 from slam.octree.base_octree import Octree
 from slam.typing.hints import ArrayNx8, Array3, ArrayNx3
-from slam.octree.segmentaters.base_plane_segmentater import PlaneSegmentater
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
 
 
 __all__ = ["DepthOctree", "DepthOctreeNode"]
@@ -54,16 +54,16 @@ class DepthOctree(Octree):
 
         self.root.points = None
 
-    def segment(self, segmentater: PlaneSegmentater) -> None:
+    def segment(self, segmenter: PlaneSegmenter) -> None:
         """
         Represents implementation of abstract method to segment planes from built octree
 
         Parameters
         ----------
-        segmentater: PlaneSegmentater
+        segmenter: PlaneSegmenter
             Plane segmentation mechanism
         """
-        self.root.segment(segmentater, self.depth)
+        self.root.segment(segmenter, self.depth)
 
     def visualize(self) -> None:
         """
@@ -124,19 +124,19 @@ class DepthOctreeNode:
 
         self.children[octet].insert(point, depth - 1)
 
-    def segment(self, segmentater: PlaneSegmentater, depth: int) -> None:
+    def segment(self, segmenter: PlaneSegmenter, depth: int) -> None:
         """
-        Segments planes using segmentater in children nodes
+        Segments planes using segmenter in children nodes
 
         Parameters
         ----------
-        segmentater: PlaneSegmentater
+        segmenter: PlaneSegmenter
             Plane segmentation mechanism
         depth: int
             Depth to insert a point
         """
         if depth == 0:
-            inliers = segmentater.segment(self.points)
+            inliers = segmenter.segment(self.points)
             self.points = np.take(self.points, inliers, axis=0)
             return
 
@@ -144,7 +144,7 @@ class DepthOctreeNode:
             if child is None:
                 continue
 
-            child.segment(segmentater, depth - 1)
+            child.segment(segmenter, depth - 1)
 
     def get_colorized(self, depth: int) -> o3d.geometry.PointCloud:
         """

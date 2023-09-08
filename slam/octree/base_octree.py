@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 import open3d as o3d
-from slam.octree.segmentaters.base_plane_segmentater import PlaneSegmentater
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
 
 
 __all__ = ["Octree"]
@@ -24,13 +24,13 @@ class Octree(ABC):
         pass
 
     @abstractmethod
-    def segment(self, segmentater: PlaneSegmentater) -> None:
+    def segment(self, segmenter: PlaneSegmenter) -> None:
         """
         Represents abstract method to segment planes from given on early stages point cloud
 
         Parameters
         ----------
-        segmentater: PlaneSegmentater
+        segmenter: PlaneSegmenter
             Plane segmentation mechanism
         """
         pass

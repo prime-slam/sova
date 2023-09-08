@@ -5,10 +5,10 @@ from slam.typing.hints import ArrayNx3
 from typing import List
 
 
-__all__ = ["PlaneSegmentater"]
+__all__ = ["PlaneSegmenters"]
 
 
-class PlaneSegmentater(ABC):
+class PlaneSegmenters(ABC):
     """
     Represents abstract class for planes segmentation mechanisms.
     """
