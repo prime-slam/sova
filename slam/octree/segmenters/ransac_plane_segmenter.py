@@ -3,13 +3,13 @@ import open3d as o3d
 
 from typing import List
 
-from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenters
+from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
 from slam.typing.hints import ArrayNx3
 
 __all__ = ["RansacPlaneSegmenter"]
 
 
-class RansacPlaneSegmenter(PlaneSegmenters):
+class RansacPlaneSegmenter(PlaneSegmenter):
     """
     Represent RANSAC-based mechanism to segment planes
 
@@ -36,9 +36,9 @@ class RansacPlaneSegmenter(PlaneSegmenters):
         if iterations < 1:
             raise ValueError("Number of RANSAC iterations must be positive")
 
-        self.threshold: np.float64 = threshold
-        self.initial_points: int = initial_points
-        self.iterations: int = iterations
+        self.__threshold: np.float64 = threshold
+        self.__initial_points: int = initial_points
+        self.__iterations: int = iterations
 
     def segment(self, points: ArrayNx3[np.float64]) -> List[int]:
         """
@@ -59,9 +59,9 @@ class RansacPlaneSegmenter(PlaneSegmenters):
 
         point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(points))
         _, inliers = point_cloud.segment_plane(
-            distance_threshold=self.threshold,
-            ransac_n=self.initial_points,
-            num_iterations=self.iterations,
+            distance_threshold=self.__threshold,
+            ransac_n=self.__initial_points,
+            num_iterations=self.__iterations,
         )
 
         return inliers

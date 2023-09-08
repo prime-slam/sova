@@ -22,7 +22,7 @@ class DepthOctree(Octree):
 
     Attributes
     ----------
-    root: Optional[DepthOctreeNode]
+    __root: Optional[DepthOctreeNode]
         Root of octree
     """
 
@@ -30,8 +30,8 @@ class DepthOctree(Octree):
         self,
         depth: int = 1,
     ) -> None:
-        self.root: Optional[DepthOctreeNode] = None
-        self.depth: int = depth
+        self.__root: Optional[DepthOctreeNode] = None
+        self.__depth: int = depth
 
     def build(self, point_cloud: o3d.geometry.PointCloud) -> None:
         """
@@ -45,14 +45,14 @@ class DepthOctree(Octree):
         if len(point_cloud.points) == 0:
             raise ValueError("Size of point cloud must be positive")
 
-        self.root = DepthOctreeNode(
+        self.__root = DepthOctreeNode(
             point_cloud.get_min_bound(), point_cloud.get_max_bound()
         )
 
         for point in point_cloud.points:
-            self.root.insert(point, self.depth)
+            self.__root.insert(point, self.__depth)
 
-        self.root.points = None
+        self.__root.__points = None
 
     def segment(self, segmenter: PlaneSegmenter) -> None:
         """
@@ -63,13 +63,13 @@ class DepthOctree(Octree):
         segmenter: PlaneSegmenter
             Plane segmentation mechanism
         """
-        self.root.segment(segmenter, self.depth)
+        self.__root.segment(segmenter, self.__depth)
 
     def visualize(self) -> None:
         """
         Represents abstract method to visualize segmented point cloud.
         """
-        point_cloud = self.root.get_colorized(self.depth)
+        point_cloud = self.__root.get_colorized(self.__depth)
         o3d.visualization.draw(point_cloud)
 
 
@@ -86,19 +86,19 @@ class DepthOctreeNode:
 
     Attributes
     ----------
-    children: Optional[ArrayNx8[DepthOctreeNode]]
+    __children: Optional[ArrayNx8[DepthOctreeNode]]
         Next nodes to current node
-    points: Optional[ArrayNx3[np.float64]]
+    __points: Optional[ArrayNx3[np.float64]]
         Points which belongs to current node
     """
 
     def __init__(
         self, bottom_bound: Array3[np.float64], top_bound: Array3[np.float64]
     ) -> None:
-        self.top_bound: Array3[np.float64] = top_bound
-        self.bottom_bound: Array3[np.float64] = bottom_bound
-        self.children: Optional[ArrayNx8[DepthOctreeNode]] = [None] * 8
-        self.points: Optional[ArrayNx3[np.float64]] = None
+        self.__top_bound: Array3[np.float64] = top_bound
+        self.__bottom_bound: Array3[np.float64] = bottom_bound
+        self.__children: Optional[ArrayNx8[DepthOctreeNode]] = [None] * 8
+        self.__points: Optional[ArrayNx3[np.float64]] = None
 
     def insert(self, point: Array3[np.float64], depth: int) -> None:
         """
@@ -112,17 +112,17 @@ class DepthOctreeNode:
             Depth to insert a point
         """
         if depth == 0:
-            if self.points is None:
-                self.points = np.array([point])
+            if self.__points is None:
+                self.__points = np.array([point])
 
-            self.points = np.append(self.points, [point], axis=0)
+            self.__points = np.append(self.__points, [point], axis=0)
             return
 
         node, octet = self._calculate_octet(point)
-        if self.children[octet] is None:
-            self.children[octet] = node
+        if self.__children[octet] is None:
+            self.__children[octet] = node
 
-        self.children[octet].insert(point, depth - 1)
+        self.__children[octet].insert(point, depth - 1)
 
     def segment(self, segmenter: PlaneSegmenter, depth: int) -> None:
         """
@@ -136,11 +136,11 @@ class DepthOctreeNode:
             Depth to insert a point
         """
         if depth == 0:
-            inliers = segmenter.segment(self.points)
-            self.points = np.take(self.points, inliers, axis=0)
+            inliers = segmenter.segment(self.__points)
+            self.__points = np.take(self.__points, inliers, axis=0)
             return
 
-        for child in self.children:
+        for child in self.__children:
             if child is None:
                 continue
 
@@ -162,7 +162,7 @@ class DepthOctreeNode:
         """
         if depth == 0:
             point_cloud = o3d.geometry.PointCloud(
-                o3d.utility.Vector3dVector(self.points)
+                o3d.utility.Vector3dVector(self.__points)
             )
             point_cloud.paint_uniform_color(
                 [random.random(), random.random(), random.random()]
@@ -170,7 +170,7 @@ class DepthOctreeNode:
             return point_cloud
 
         point_cloud = o3d.geometry.PointCloud()
-        for child in self.children:
+        for child in self.__children:
             if child is None:
                 continue
 
@@ -194,35 +194,35 @@ class DepthOctreeNode:
         octet: int
             Number of octet to which a point is inserted
         """
-        center = (self.top_bound + self.bottom_bound) / 2
+        center = (self.__top_bound + self.__bottom_bound) / 2
         diff = np.array([0, 0, 0])
 
         if point[0] < center[0]:
             if point[1] < center[1]:
                 if point[2] < center[2]:
                     diff = np.array([0, 0, 0])
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 0
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 0
                 else:
                     diff[2] += center[2]
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 4
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 4
             else:
                 diff[1] += center[1]
                 if point[2] < center[2]:
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 1
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 1
                 else:
                     diff[2] += center[2]
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 5
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 5
         else:
             diff[0] += center[0]
             if point[1] < center[1]:
                 if point[2] < center[2]:
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 3
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 3
                 else:
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 7
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 7
             else:
                 diff[1] += center[1]
                 if point[2] < center[2]:
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 2
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 2
                 else:
                     diff[2] += center[2]
-                    return DepthOctreeNode(self.bottom_bound + diff, center + diff), 6
+                    return DepthOctreeNode(self.__bottom_bound + diff, center + diff), 6
