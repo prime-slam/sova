@@ -63,6 +63,9 @@ class DepthOctree(Octree):
         segmenter: PlaneSegmenter
             Plane segmentation mechanism
         """
+        if self.__root is None:
+            raise AttributeError("There is nothing to segment. Please, build octree first.")
+
         self.__root.segment(segmenter, self.__depth)
 
     def visualize(self) -> None:
