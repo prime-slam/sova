@@ -1,21 +1,20 @@
-import numpy as np
 import open3d as o3d
 
 from typing import List
 
-from slam.octree.segmenters.base_plane_segmenter import PlaneSegmenter
+from slam.segmenters.base_segmenter import Segmenter
 from slam.typing.hints import ArrayNx3
 
-__all__ = ["RansacPlaneSegmenter"]
+__all__ = ["RansacSegmenter"]
 
 
-class RansacPlaneSegmenter(PlaneSegmenter):
+class RansacSegmenter(Segmenter):
     """
     Represent RANSAC-based mechanism to segment planes
 
     Parameters
     ----------
-    threshold: np.float64
+    threshold: float
         Max distance a point can be from the plane model, and still be considered an inlier
     initial_points: int
         Number of initial points to be considered inliers in each iteration
@@ -25,7 +24,7 @@ class RansacPlaneSegmenter(PlaneSegmenter):
 
     def __init__(
         self,
-        threshold: np.float64 = 0.1,
+        threshold: float = 0.1,
         initial_points: int = 3,
         iterations: int = 5000,
     ) -> None:
@@ -36,17 +35,17 @@ class RansacPlaneSegmenter(PlaneSegmenter):
         if iterations < 1:
             raise ValueError("Number of RANSAC iterations must be positive")
 
-        self.__threshold: np.float64 = threshold
+        self.__threshold: float = threshold
         self.__initial_points: int = initial_points
         self.__iterations: int = iterations
 
-    def segment(self, points: ArrayNx3[np.float64]) -> List[int]:
+    def segment(self, points: ArrayNx3[float]) -> List[int]:
         """
         Segments given points using RANSAC method
 
         Parameters
         ----------
-        points: ArrayNx3[np.float64]
+        points: ArrayNx3[float]
             3D points are used to segment planes using RANSAC
 
         Returns
