@@ -5,6 +5,8 @@ from typing import List
 from slam.segmenters.base_segmenter import Segmenter
 from slam.typing import ArrayNx3
 
+__all__ = ["FullSegmenter"]
+
 
 class FullSegmenter(Segmenter):
     """
