@@ -19,11 +19,6 @@ class DepthOctree(Octree):
     ----------
     depth: int
         Depth of octree
-
-    Attributes
-    ----------
-    __root: Optional[DepthOctreeNode]
-        Root of octree
     """
 
     def __init__(
@@ -75,6 +70,18 @@ class DepthOctree(Octree):
         point_cloud = self.__root.get_colorized(self.__depth)
         o3d.visualization.draw(point_cloud)
 
+    @property
+    def depth(self) -> int:
+        """
+        Represents depth property of current implementation
+
+        Returns
+        -------
+        depth: int
+            Depth of octree
+        """
+        return self.__depth
+
 
 class DepthOctreeNode:
     """
@@ -86,13 +93,6 @@ class DepthOctreeNode:
         Bottom bound of current node
     top_bound: Array3[np.float64]
         Top bound of current node
-
-    Attributes
-    ----------
-    __children: Optional[ArrayNx8[DepthOctreeNode]]
-        Next nodes to current node
-    __points: Optional[ArrayNx3[np.float64]]
-        Points which belongs to current node
     """
 
     def __init__(

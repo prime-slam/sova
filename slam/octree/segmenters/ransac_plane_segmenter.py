@@ -31,8 +31,8 @@ class RansacPlaneSegmenter(PlaneSegmenter):
     ) -> None:
         if threshold <= 0:
             raise ValueError("Threshold must be positive")
-        if initial_points < 1:
-            raise ValueError("Initial points count must be more than zero")
+        if initial_points < 3:
+            raise ValueError("Initial points count must be more or equal than three")
         if iterations < 1:
             raise ValueError("Number of RANSAC iterations must be positive")
 
@@ -47,7 +47,7 @@ class RansacPlaneSegmenter(PlaneSegmenter):
         Parameters
         ----------
         points: ArrayNx3[np.float64]
-            3D points, which uses to segment planes using RANSAC
+            3D points are used to segment planes using RANSAC
 
         Returns
         -------

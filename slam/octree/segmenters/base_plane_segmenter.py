@@ -21,7 +21,7 @@ class PlaneSegmenter(ABC):
         Parameters
         ----------
         points: ArrayNx3[np.float64]
-            3D points, which uses to segment planes
+            3D points are used to segment planes
 
         Returns
         -------
