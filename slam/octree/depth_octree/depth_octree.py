@@ -1,6 +1,7 @@
 import open3d as o3d
 
 from typing import Optional
+import random
 
 from slam.octree.base_octree import Octree
 from slam.octree.depth_octree.depth_octree_config import DepthOctreeConfig
@@ -38,7 +39,7 @@ class DepthOctree(Octree):
         Parameters
         ----------
         point_cloud: o3d.geometry.PointCloud
-            Point cloud, which uses to build octree
+            Point cloud are used to build octree
         """
         self.__root = DepthOctreeNode(
             point_cloud.get_min_bound(), point_cloud.get_max_bound()
@@ -59,5 +60,6 @@ class DepthOctree(Octree):
         """
         Represents abstract method to visualize segmented point cloud.
         """
+        random.seed(0)
         point_cloud = self.__root.get_colorized(self.__config.depth)
         o3d.visualization.draw(point_cloud)

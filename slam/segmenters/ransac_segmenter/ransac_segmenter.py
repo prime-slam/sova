@@ -57,6 +57,7 @@ class RansacSegmenter(Segmenter):
             raise ValueError("Length of points list must be positive")
 
         point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(points))
+        # TODO: Handle RuntimeError exception in case len(inliers) < ransac_n
         _, inliers = point_cloud.segment_plane(
             distance_threshold=self.__threshold,
             ransac_n=self.__initial_points,
