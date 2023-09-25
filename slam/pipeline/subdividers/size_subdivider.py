@@ -3,6 +3,8 @@ import open3d as o3d
 from slam.pipeline import Subdivider, SubdividerFunc
 from slam.typing import ArrayNx3
 
+__all__ = ["SizeSubdivider"]
+
 
 class SizeSubdivider(Subdivider):
     """
