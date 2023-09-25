@@ -1,14 +1,12 @@
-from typing import Callable, List
-
 import open3d as o3d
 
+from typing import List
 from abc import ABC, abstractmethod
-
-__all__ = ["Octree"]
 
 from slam.pipeline.filters.filter_base import Filter
 from slam.pipeline.subdividers.subdivider_base import Subdivider
-from slam.typing import ArrayNx3
+
+__all__ = ["Octree"]
 
 
 class Octree(ABC):
