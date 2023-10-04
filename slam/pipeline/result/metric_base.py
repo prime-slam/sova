@@ -1,35 +1,38 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 __all__ = ["Metric"]
 
 
-class Metric(ABC):
+class Metric:
     """
-    Represents metric abstract class, which was created to produce pretty print
-    and kind of structural output
+    Represents metric class, which was created to produce pretty print
+    and kind of structural output of pipeline result.
     """
-    @property
     @abstractmethod
+    def __init__(self, name: str, value: str) -> None:
+        self.name = name
+        self.value = value
+
+    @property
     def name(self) -> str:
         """
-        Represents abstract method to get name of metric
+        Represents method to get name of metric
 
         Returns
         -------
         name: str
             Metric's name
         """
-        pass
+        return self.name
 
     @property
-    @abstractmethod
     def value(self) -> float:
         """
-        Represents abstract method to get value of metric
+        Represents method to get value of metric
 
         Returns
         -------
         value: float
             Metric's value
         """
-        pass
+        return self.value

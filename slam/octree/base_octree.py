@@ -8,6 +8,8 @@ from slam.pipeline.subdividers.subdivider_base import Subdivider
 
 __all__ = ["Octree"]
 
+from slam.typing import ArrayNx3
+
 
 class Octree(ABC):
     """
@@ -24,6 +26,9 @@ class Octree(ABC):
 
     @abstractmethod
     def filter(self, filters: List[Filter]):
+        pass
+
+    def get_points(self, pose_number: int) -> ArrayNx3[float]:
         pass
 
     @abstractmethod
