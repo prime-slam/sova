@@ -28,6 +28,7 @@ class Octree(ABC):
     def filter(self, filters: List[Filter]):
         pass
 
+    @abstractmethod
     def get_points(self, pose_number: int) -> ArrayNx3[float]:
         pass
 
