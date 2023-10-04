@@ -15,7 +15,7 @@ class Octree(ABC):
     """
 
     @abstractmethod
-    def insert(self, pose: int, point_cloud: o3d.geometry.PointCloud):
+    def insert(self, pose_number: int, point_cloud: o3d.geometry.PointCloud):
         pass
 
     @abstractmethod

@@ -1,6 +1,6 @@
 import open3d as o3d
 
-from slam.pipeline import Subdivider, SubdividerFunc
+from slam.pipeline import Subdivider
 from slam.typing import ArrayNx3
 
 __all__ = ["SizeSubdivider"]
@@ -23,24 +23,26 @@ class SizeSubdivider(Subdivider):
         self.size: float = size
         self.scale: float = scale
 
-    def create_func(self) -> SubdividerFunc:
+    def __call__(self, points: ArrayNx3[float]) -> bool:
         """
-        Represents implementation of Subdivider abstract class
+        Represents implementation of abstract call method
+
+        Parameters
+        ----------
+        points: ArrayNx3[float]
+            Points of point cloud (or octree voxel)
 
         Returns
         -------
-        func: SubdividerFunc
-            Function that contains "size of voxel" subdivider condition
+        is_good: bool
+            Returns True if size of point cloud less than predefined value, otherwise returns False
         """
 
-        def f(points: ArrayNx3[float]) -> bool:
-            point_cloud = o3d.geometry.PointCloud(
-                o3d.utility.Vector3dVector(points)
-            )
-            min_bound, max_bound = point_cloud.get_min_bound(), point_cloud.get_max_bound()
+        point_cloud = o3d.geometry.PointCloud(
+            o3d.utility.Vector3dVector(points)
+        )
+        min_bound, max_bound = point_cloud.get_min_bound(), point_cloud.get_max_bound()
 
-            return abs(min_bound[0] - max_bound[0]) * self.scale <= self.size and \
-                abs(min_bound[1] - max_bound[1]) * self.scale <= self.size and \
-                abs(min_bound[2] - max_bound[2]) * self.scale <= self.size
-
-        return f
+        return abs(min_bound[0] - max_bound[0]) * self.scale <= self.size and \
+            abs(min_bound[1] - max_bound[1]) * self.scale <= self.size and \
+            abs(min_bound[2] - max_bound[2]) * self.scale <= self.size
