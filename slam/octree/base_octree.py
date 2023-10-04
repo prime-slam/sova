@@ -5,10 +5,9 @@ from abc import ABC, abstractmethod
 
 from slam.pipeline.filters.filter_base import Filter
 from slam.pipeline.subdividers.subdivider_base import Subdivider
+from slam.typing import ArrayNx3
 
 __all__ = ["Octree"]
-
-from slam.typing import ArrayNx3
 
 
 class Octree(ABC):
