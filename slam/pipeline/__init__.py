@@ -8,5 +8,3 @@ from slam.pipeline.static_pipeline import *
 from slam.pipeline.subdividers import CountSubdivider, Subdivider
 
 __all__ = pipeline_base_module.__all__ + static_pipeline_module.__all__
-
-
