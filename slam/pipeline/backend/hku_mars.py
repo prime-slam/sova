@@ -9,6 +9,7 @@ class HkuMarsBackend(Backend):
     """
     Represents Hku-Mars backend implementation
     """
+
     def __init__(self) -> None:
         pass
 

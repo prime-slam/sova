@@ -10,6 +10,7 @@ class Backend(ABC):
     """
     Represents base (abstract) class for backend implementations
     """
+
     @abstractmethod
     def process(self, octree: Octree) -> PipelineResult:
         """

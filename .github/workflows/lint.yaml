@@ -38,13 +38,9 @@ jobs:
 
       - name: Run flake8
         uses: py-actions/flake8@v2
-        with:
-          ignore: "__init__.py:F401"
-          max-line-length: "120"
-
 
       - name: Run black
         uses: psf/black@stable
         with:
           options: "--check --verbose --diff"
-          version: "21.5b1"
+          version: "22.8.0"

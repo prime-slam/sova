@@ -38,11 +38,11 @@ class SizeSubdivider(Subdivider):
             Returns True if size of point cloud less than predefined value, otherwise returns False
         """
 
-        point_cloud = o3d.geometry.PointCloud(
-            o3d.utility.Vector3dVector(points)
-        )
+        point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(points))
         min_bound, max_bound = point_cloud.get_min_bound(), point_cloud.get_max_bound()
 
-        return abs(min_bound[0] - max_bound[0]) * self.scale <= self.size and \
-            abs(min_bound[1] - max_bound[1]) * self.scale <= self.size and \
-            abs(min_bound[2] - max_bound[2]) * self.scale <= self.size
+        return (
+            abs(min_bound[0] - max_bound[0]) * self.scale <= self.size
+            and abs(min_bound[1] - max_bound[1]) * self.scale <= self.size
+            and abs(min_bound[2] - max_bound[2]) * self.scale <= self.size
+        )

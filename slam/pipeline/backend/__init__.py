@@ -5,4 +5,6 @@ from slam.pipeline.backend.backend_base import *
 from slam.pipeline.backend.eigen_factor import *
 from slam.pipeline.backend.hku_mars import *
 
-__all__ = backend_base_module.__all__ + hku_mars_module.__all__ + eigen_factor_module.__all__
+__all__ = (
+    backend_base_module.__all__ + hku_mars_module.__all__ + eigen_factor_module.__all__
+)

@@ -9,6 +9,7 @@ class StaticPipeline(Pipeline):
     """
     Represents simple static pipeline implementation
     """
+
     def run(self) -> PipelineResult:
         """
         Represents base pipeline algorithm:

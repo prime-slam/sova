@@ -43,10 +43,7 @@ class EigenFactorBackend(Backend):
         self.__init_point_clouds(octree)
         self.__graph.solve(mrob.LM_ELLIPS, self.__iterations_number)
 
-        return PipelineResult(
-            self.__graph.get_estimated_state(),
-            self.__graph.chi2()
-        )
+        return PipelineResult(self.__graph.get_estimated_state(), self.__graph.chi2())
 
     def __init_poses(self) -> None:
         """
