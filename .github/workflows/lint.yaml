@@ -29,6 +29,7 @@ jobs:
         uses: crate-ci/typos@master
         with:
           files: .
+          config: .github/configs/_typos.toml
 
       - name: Check imports
         uses: isort/isort-action@master

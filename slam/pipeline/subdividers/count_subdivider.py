@@ -12,7 +12,7 @@ class CountSubdivider(Subdivider):
     Parameters
     ----------
     count: int
-        Bottom bound numer of points in given point cloud
+        Bottom bound number of points in given point cloud
     """
 
     def __init__(self, count: int) -> None:
