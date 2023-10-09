@@ -1,5 +1,4 @@
 import slam.segmenters.base_segmenter as base_segmenter_module
-
 from slam.segmenters import full_segmenter, ransac_segmenter
 from slam.segmenters.base_segmenter import *
 

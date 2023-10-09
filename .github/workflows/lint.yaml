@@ -3,7 +3,7 @@ name: Linters
 on: [push]
 
 jobs:
-  test:
+  test-and-lint:
     strategy:
       matrix:
         os: [ ubuntu-22.04, windows-latest ]
@@ -29,12 +29,12 @@ jobs:
         uses: crate-ci/typos@master
         with:
           files: .
-          config: .github/configs/_typos.toml
+          config: _typos.toml
 
       - name: Check imports
         uses: isort/isort-action@master
         with:
-          requirementsFiles: "requirements.txt"
+          configuration: .isort.cfg
 
       - name: Run flake8
         uses: py-actions/flake8@v2

@@ -1,7 +1,7 @@
 import open3d as o3d
 
-from typing import List
 from abc import ABC, abstractmethod
+from typing import List
 
 from slam.pipeline.filters.filter_base import Filter
 from slam.pipeline.subdividers.subdivider_base import Subdivider

@@ -1,8 +1,8 @@
 import numpy as np
 import open3d as o3d
 
-from typing import Optional, Tuple
 import random
+from typing import Optional, Tuple
 
 from slam.segmenters import Segmenter
 from slam.typing.hints import Array3, ArrayNx3, ArrayNx8
