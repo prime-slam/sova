@@ -1,8 +1,8 @@
 import numpy as np
 import open3d as o3d
 
-from typing import Optional, Tuple
 import random
+from typing import Optional, Tuple
 
 from slam.segmenters import Segmenter
 from slam.typing.hints import Array3, ArrayNx3, ArrayNx8
@@ -22,9 +22,7 @@ class DepthOctreeNode:
         Top bound of current node
     """
 
-    def __init__(
-        self, bottom_bound: Array3[float], top_bound: Array3[float]
-    ) -> None:
+    def __init__(self, bottom_bound: Array3[float], top_bound: Array3[float]) -> None:
         self.__top_bound: Array3[float] = top_bound
         self.__bottom_bound: Array3[float] = bottom_bound
         self.__children: Optional[ArrayNx8[DepthOctreeNode]] = [None] * 8
@@ -108,7 +106,7 @@ class DepthOctreeNode:
 
         return point_cloud
 
-    def _calculate_octet(self, point: Array3[float]) -> Tuple['DepthOctreeNode', int]:
+    def _calculate_octet(self, point: Array3[float]) -> Tuple["DepthOctreeNode", int]:
         """
         Calculate octet number using point
 

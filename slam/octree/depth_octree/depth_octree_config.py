@@ -13,4 +13,5 @@ class DepthOctreeConfig:
     depth: int
         Depth of octree
     """
+
     depth: int = 1

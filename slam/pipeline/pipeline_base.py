@@ -1,7 +1,7 @@
 import open3d as o3d
 
-from typing import List
 from abc import ABC, abstractmethod
+from typing import List
 
 from slam.pipeline.backend.backend_base import Backend
 from slam.pipeline.filters.filter_base import Filter
@@ -30,13 +30,14 @@ class Pipeline(ABC):
     backend: Backend
         Backend of SLAM algorithm
     """
+
     def __init__(
-            self,
-            point_clouds: List[o3d.geometry.PointCloud],
-            poses: ArrayNx4x4[float],
-            subdividers: List[Subdivider],
-            filters: List[Filter],
-            backend: Backend,
+        self,
+        point_clouds: List[o3d.geometry.PointCloud],
+        poses: ArrayNx4x4[float],
+        subdividers: List[Subdivider],
+        filters: List[Filter],
+        backend: Backend,
     ) -> None:
         if len(point_clouds) != len(poses):
             raise ValueError("Sizes of point_cloud and poses arrays must be equal")
@@ -69,5 +70,6 @@ class Pipeline(ABC):
             List of point clouds in global coordinates
         """
         return [
-            point_cloud.transform(pose) for point_cloud, pose in zip(self.point_clouds, self.poses)
+            point_cloud.transform(pose)
+            for point_cloud, pose in zip(self.point_clouds, self.poses)
         ]

@@ -1,7 +1,7 @@
 import open3d as o3d
 
-from typing import Optional
 import random
+from typing import Optional
 
 from slam.octree.base_octree import Octree
 from slam.octree.depth_octree.depth_octree_config import DepthOctreeConfig

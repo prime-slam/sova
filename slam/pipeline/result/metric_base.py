@@ -8,6 +8,7 @@ class Metric:
     Represents metric class, which was created to produce pretty print
     and kind of structural output of pipeline result.
     """
+
     @abstractmethod
     def __init__(self, name: str, value: str) -> None:
         self.name = name
