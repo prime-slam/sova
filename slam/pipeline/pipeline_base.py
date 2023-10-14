@@ -2,6 +2,7 @@ import open3d as o3d
 
 from abc import ABC, abstractmethod
 from typing import List
+import copy
 
 from slam.pipeline.backend.backend_base import Backend
 from slam.pipeline.filters.filter_base import Filter
@@ -70,6 +71,6 @@ class Pipeline(ABC):
             List of point clouds in global coordinates
         """
         return [
-            point_cloud.transform(pose)
+            copy.deepcopy(point_cloud).transform(pose)
             for point_cloud, pose in zip(self.point_clouds, self.poses)
         ]

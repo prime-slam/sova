@@ -1,6 +1,6 @@
 import mrob
 
-from slam.octree import Octree
+from octreelib.grid import GridBase
 from slam.pipeline.backend.backend_base import Backend
 from slam.pipeline.result.pipeline_result import PipelineResult
 
@@ -24,15 +24,15 @@ class EigenFactorBackend(Backend):
         self.__poses_number: int = poses_number
         self.__iterations_number: int = iterations_number
 
-    def process(self, octree: Octree) -> PipelineResult:
+    def process(self, grid: GridBase) -> PipelineResult:
         """
         Represents implementation of Backend abstract class, which
         takes remaining points from poses (Octree, essentially) and optimises by them.
 
         Parameters
         ----------
-        octree: Octree
-            Octree which contains all inserted point clouds
+        grid: GridBase
+            Represents grid with all inserted point clouds
 
         Returns
         -------
@@ -40,7 +40,7 @@ class EigenFactorBackend(Backend):
             Structural output of pipeline backend
         """
         self.__init_poses()
-        self.__init_point_clouds(octree)
+        self.__init_point_clouds(grid)
         self.__graph.solve(mrob.LM_ELLIPS, self.__iterations_number)
 
         return PipelineResult(self.__graph.get_estimated_state(), self.__graph.chi2())
@@ -57,7 +57,7 @@ class EigenFactorBackend(Backend):
 
         return pose_id
 
-    def __init_point_clouds(self, octree: Octree) -> None:
+    def __init_point_clouds(self, grid: GridBase) -> None:
         """
         Inits feature (planes) point clouds in EigenFactor graph.
         """
@@ -66,6 +66,6 @@ class EigenFactorBackend(Backend):
             self.__graph.eigen_factor_plane_add_points_array(
                 planeEigenId=pose_number,
                 nodePoseId=pose_number,
-                pointsArray=octree.get_points(pose_number),
+                pointsArray=grid.get_points(pose_number),
                 W=1.0,
             )
