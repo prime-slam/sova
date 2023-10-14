@@ -2,18 +2,18 @@ from abc import ABC, abstractmethod
 
 from slam.typing import ArrayNx3
 
-__all__ = ["Filter"]
+__all__ = ["Subdivider"]
 
 
-class Filter(ABC):
+class Subdivider(ABC):
     """
-    Represents base (abstract) filter class, which duty is to return filter statement about points
+    Represents abstract subdivider, which returns statement about voxel: subdivide or not.
     """
 
     @abstractmethod
     def __call__(self, points: ArrayNx3[float]) -> bool:
         """
-        Represents filter function signature to call it from Octree implementation
+        Represent abstract dunder method which returns statement about voxel
 
         Parameters
         ----------
@@ -22,7 +22,7 @@ class Filter(ABC):
 
         Returns
         -------
-        is_good: bool
-            Condition, which describes: if the point cloud (or voxel) satisfies the certain condition
+        should_be_split: bool
+            Condition, which describes: if the point cloud (or voxel) should be divided
         """
         pass

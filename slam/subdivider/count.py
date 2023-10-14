@@ -1,4 +1,4 @@
-from slam.pipeline.subdividers.subdivider_base import Subdivider
+from slam.subdivider.subdivider import Subdivider
 from slam.typing import ArrayNx3
 
 __all__ = ["CountSubdivider"]
@@ -7,12 +7,12 @@ __all__ = ["CountSubdivider"]
 class CountSubdivider(Subdivider):
     """
     Represents basic "number of points" condition: if there are more than N points in voxel,
-    it will be split.
+    it should be split.
 
     Parameters
     ----------
     count: int
-        Bottom bound number of points in given point cloud
+        Upper bound number of points in given point cloud
     """
 
     def __init__(self, count: int) -> None:
@@ -20,7 +20,7 @@ class CountSubdivider(Subdivider):
 
     def __call__(self, points: ArrayNx3[float]) -> bool:
         """
-        Represents implementation of abstract call method
+        Represent count-based subdivider mechanism which returns True/False statement based on points count
 
         Parameters
         ----------
@@ -29,7 +29,7 @@ class CountSubdivider(Subdivider):
 
         Returns
         -------
-        is_good: bool
-            Returns True if number of points in given point cloud less than predefined value, otherwise returns False
+        should_be_split: bool
+            Returns False if number of points in given point cloud more than predefined value, otherwise returns False
         """
         return len(points) <= self.count

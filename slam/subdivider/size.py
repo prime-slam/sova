@@ -1,6 +1,6 @@
 import open3d as o3d
 
-from slam.pipeline import Subdivider
+from slam.subdivider.subdivider import Subdivider
 from slam.typing import ArrayNx3
 
 __all__ = ["SizeSubdivider"]
@@ -16,7 +16,7 @@ class SizeSubdivider(Subdivider):
     size: float
         Minimum size of voxel
     scale: float
-        Scale information about data
+        Scale information about LiDAR
     """
 
     def __init__(self, size: float, scale: float) -> None:
@@ -25,7 +25,7 @@ class SizeSubdivider(Subdivider):
 
     def __call__(self, points: ArrayNx3[float]) -> bool:
         """
-        Represents implementation of abstract call method
+        Represent size-based subdivider mechanism which returns True/False statement based on voxel size
 
         Parameters
         ----------
@@ -34,15 +34,15 @@ class SizeSubdivider(Subdivider):
 
         Returns
         -------
-        is_good: bool
-            Returns True if size of point cloud less than predefined value, otherwise returns False
+        should_be_split: bool
+            Returns True if size of point cloud more than predefined value, otherwise returns False
         """
 
         point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(points))
         min_bound, max_bound = point_cloud.get_min_bound(), point_cloud.get_max_bound()
 
         return (
-            abs(min_bound[0] - max_bound[0]) * self.scale <= self.size
-            and abs(min_bound[1] - max_bound[1]) * self.scale <= self.size
-            and abs(min_bound[2] - max_bound[2]) * self.scale <= self.size
+            abs(min_bound[0] - max_bound[0]) * self.scale > self.size
+            or abs(min_bound[1] - max_bound[1]) * self.scale > self.size
+            or abs(min_bound[2] - max_bound[2]) * self.scale > self.size
         )

@@ -2,18 +2,18 @@ from abc import ABC, abstractmethod
 
 from slam.typing import ArrayNx3
 
-__all__ = ["Subdivider"]
+__all__ = ["Filter"]
 
 
-class Subdivider(ABC):
+class Filter(ABC):
     """
-    Represents base (abstract) subdivider class, which duty is to return subdivide statement about points
+    Represents abstract filter, which filters given octree/grid
     """
 
     @abstractmethod
     def __call__(self, points: ArrayNx3[float]) -> bool:
         """
-        Represents subdivider function signature to call it from Octree implementation
+        Represents filter function signature to call it from Octree implementation
 
         Parameters
         ----------
@@ -23,6 +23,6 @@ class Subdivider(ABC):
         Returns
         -------
         is_good: bool
-            Condition, which describes: if the point cloud satisfies the certain condition
+            Condition, which describes: if the point cloud (or voxel) satisfies the certain condition
         """
         pass

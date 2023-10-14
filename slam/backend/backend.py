@@ -2,7 +2,7 @@ from octreelib.grid import GridBase
 
 from abc import ABC, abstractmethod
 
-from slam.pipeline.result.pipeline_result import PipelineResult
+from slam.pipeline.pipeline import PipelineOutput
 
 __all__ = ["Backend"]
 
@@ -13,7 +13,7 @@ class Backend(ABC):
     """
 
     @abstractmethod
-    def process(self, grid: GridBase) -> PipelineResult:
+    def process(self, grid: GridBase) -> PipelineOutput:
         """
         Represents base method of backend, which should produce Pipeline result by
         given octree
@@ -25,7 +25,7 @@ class Backend(ABC):
 
         Returns
         -------
-        result: PipelineResult
-            Structural output of pipeline backend
+        output: PipelineOutput
+            Result of backend optimisations
         """
         pass
