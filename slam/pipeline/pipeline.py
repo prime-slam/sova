@@ -4,88 +4,13 @@ import copy
 from abc import ABC, abstractmethod
 from typing import List
 
-from slam.backend.backend import Backend
+from slam.backend.backend import Backend, BackendOutput
 from slam.filter.filter import Filter
 from slam.segmenter import Segmenter
 from slam.subdivider.subdivider import Subdivider
 from slam.typing.hints import ArrayNx4x4
 
-__all__ = ["Metric", "PipelineOutput", "Pipeline"]
-
-
-class Metric:
-    """
-    Represents metric of slam
-    """
-
-    @abstractmethod
-    def __init__(self, name: str, value: float) -> None:
-        self._name = name
-        self._value = value
-
-    @property
-    def name(self) -> str:
-        """
-        Represents method to get name of metric
-
-        Returns
-        -------
-        name: str
-            Metric's name
-        """
-        return self._name
-
-    @property
-    def value(self) -> float:
-        """
-        Represents method to get value of metric
-
-        Returns
-        -------
-        value: float
-            Metric's value
-        """
-        return self._value
-
-
-class PipelineOutput:
-    """
-    Represents slam result (output) with all necessary artifacts
-
-    Parameters
-    ----------
-    poses: ArrayNx4x4[float]
-        Optimised poses produced by one of backends
-    metrics: List[Metric]
-        Metrics which allows to evaluate the resulting optimizations
-    """
-
-    def __init__(self, poses: ArrayNx4x4[float], metrics: List[Metric]) -> None:
-        self._poses: ArrayNx4x4[float] = poses
-        self._metrics: List[Metric] = metrics
-
-    @property
-    def poses(self) -> ArrayNx4x4[float]:
-        """
-        Represents method to get optimised poses
-
-        Returns
-        -------
-        poses: ArrayNx4x4[float]
-            Optimised poses
-        """
-        return self.poses
-
-    def __str__(self) -> str:
-        """
-        Represents implementation of str dunder method to produce slam result pretty print
-
-        Returns
-        -------
-        string: str
-            String representation of slam result
-        """
-        return "\n".join([f"{metric.name}: {metric.value}" for metric in self._metrics])
+__all__ = ["Pipeline"]
 
 
 class Pipeline(ABC):
@@ -129,7 +54,7 @@ class Pipeline(ABC):
         self._backend: Backend = backend
 
     @abstractmethod
-    def run(self) -> PipelineOutput:
+    def run(self) -> BackendOutput:
         """
         Represents abstract method to run slam and produce output
 

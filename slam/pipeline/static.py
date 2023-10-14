@@ -1,7 +1,8 @@
 from octreelib.grid import StaticGrid, StaticGridConfig
 from octreelib.octree import Octree, OctreeConfig
 
-from slam.pipeline.pipeline import Pipeline, PipelineOutput
+from slam.backend import BackendOutput
+from slam.pipeline.pipeline import Pipeline
 
 __all__ = ["StaticPipeline"]
 
@@ -11,7 +12,7 @@ class StaticPipeline(Pipeline):
     Represents simple static slam implementation
     """
 
-    def run(self) -> PipelineOutput:
+    def run(self) -> BackendOutput:
         """
         Represents base slam algorithm:
         1. Transforms point clouds to global coordinates
@@ -27,6 +28,7 @@ class StaticPipeline(Pipeline):
         """
         transformed_point_clouds = self._transform_point_clouds()
         grid = StaticGrid(StaticGridConfig(Octree, OctreeConfig()))
+        grid.octrees.clear()  # TODO: wtf??? Why do I need to do this every time?
 
         for pose_number, point_cloud in enumerate(transformed_point_clouds):
             grid.insert_points(pose_number, point_cloud.points)
