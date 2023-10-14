@@ -1,8 +1,7 @@
 import mrob
 from octreelib.grid import GridBase
 
-from slam.backend.backend import Backend
-from slam.pipeline.pipeline import PipelineOutput, Metric
+from slam.backend.backend import Backend, BackendOutput, Metric
 
 __all__ = ["EigenFactorBackend"]
 
@@ -24,7 +23,7 @@ class EigenFactorBackend(Backend):
         self.__poses_number: int = poses_number
         self.__iterations_number: int = iterations_number
 
-    def process(self, grid: GridBase) -> PipelineOutput:
+    def process(self, grid: GridBase) -> BackendOutput:
         """
         Represents implementation of Backend abstract class, which
         takes remaining points from poses (Octree, essentially) and optimises by them.
@@ -36,21 +35,21 @@ class EigenFactorBackend(Backend):
 
         Returns
         -------
-        output: PipelineOutput
+        output: BackendOutput
             Result of backend optimisations
         """
         self.__init_poses()
+        self.__init_point_clouds(grid)
         metrics = [
             Metric(name="FGraph initial error", value=self.__graph.chi2(True)),
         ]
-        self.__init_point_clouds(grid)
         self.__graph.solve(mrob.LM_ELLIPS, self.__iterations_number)
 
         metrics.append(
             Metric(name="chi2", value=self.__graph.chi2()),
         )
 
-        return PipelineOutput(self.__graph.get_estimated_state(), metrics)
+        return BackendOutput(self.__graph.get_estimated_state(), metrics)
 
     def __init_poses(self) -> None:
         """
