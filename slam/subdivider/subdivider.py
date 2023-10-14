@@ -22,7 +22,7 @@ class Subdivider(ABC):
 
         Returns
         -------
-        is_subdivide: bool
-            Condition, which describes: if the point cloud (or voxel) satisfies the certain condition
+        should_be_split: bool
+            Condition, which describes: if the point cloud (or voxel) should be divided
         """
         pass

@@ -2,7 +2,7 @@ import mrob
 from octreelib.grid import GridBase
 
 from slam.backend.backend import Backend
-from slam.pipeline.pipeline import PipelineOutput
+from slam.pipeline.pipeline import PipelineOutput, Metric
 
 __all__ = ["EigenFactorBackend"]
 
@@ -40,10 +40,17 @@ class EigenFactorBackend(Backend):
             Result of backend optimisations
         """
         self.__init_poses()
+        metrics = [
+            Metric(name="FGraph initial error", value=self.__graph.chi2(True)),
+        ]
         self.__init_point_clouds(grid)
         self.__graph.solve(mrob.LM_ELLIPS, self.__iterations_number)
 
-        return PipelineOutput(self.__graph.get_estimated_state(), self.__graph.chi2())
+        metrics.append(
+            Metric(name="chi2", value=self.__graph.chi2()),
+        )
+
+        return PipelineOutput(self.__graph.get_estimated_state(), metrics)
 
     def __init_poses(self) -> None:
         """

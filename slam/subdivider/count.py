@@ -29,7 +29,7 @@ class CountSubdivider(Subdivider):
 
         Returns
         -------
-        is_subdivide: bool
+        should_be_split: bool
             Returns False if number of points in given point cloud more than predefined value, otherwise returns False
         """
         return len(points) <= self.count

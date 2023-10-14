@@ -34,7 +34,7 @@ class SizeSubdivider(Subdivider):
 
         Returns
         -------
-        is_subdivide: bool
+        should_be_split: bool
             Returns True if size of point cloud more than predefined value, otherwise returns False
         """
 
