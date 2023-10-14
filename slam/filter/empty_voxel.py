@@ -1,10 +1,10 @@
-from slam.pipeline.filters.filter_base import Filter
+from slam.filter.filter import Filter
 from slam.typing import ArrayNx3
 
-__all__ = ["EmptyVoxelFilter"]
+__all__ = ["EmptyVoxel"]
 
 
-class EmptyVoxelFilter(Filter):
+class EmptyVoxel(Filter):
     """
     Represents "empty voxel" filter: if voxel contains no points, it should be deleted
     """
