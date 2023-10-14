@@ -69,9 +69,9 @@ class RansacSegmenter(Segmenter):
                 segmented_points.append(point)
 
             return segmented_points
-        except:
+        except Exception as ex:
             print(
-                f"Size: {len(points)}. There were less than {self.__initial_points} points segmented"
+                f"Size: {len(points)}. There were less than {self.__initial_points} points segmented. {ex}"
             )
 
         return []

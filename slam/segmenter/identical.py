@@ -1,7 +1,3 @@
-import numpy as np
-
-from typing import List
-
 from slam.segmenter.segmenter import Segmenter
 from slam.typing import ArrayNx3
 
