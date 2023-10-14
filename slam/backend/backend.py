@@ -80,7 +80,9 @@ class BackendOutput:
         string: str
             String representation of slam result
         """
-        return "\n".join([f" {metric.name}: {metric.value}" for metric in self._metrics])
+        return "\n".join(
+            [f" {metric.name}: {metric.value}" for metric in self._metrics]
+        )
 
 
 class Backend(ABC):
