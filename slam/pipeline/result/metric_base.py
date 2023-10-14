@@ -10,9 +10,9 @@ class Metric:
     """
 
     @abstractmethod
-    def __init__(self, name: str, value: str) -> None:
-        self.name = name
-        self.value = value
+    def __init__(self, name: str, value: float) -> None:
+        self._name = name
+        self._value = value
 
     @property
     def name(self) -> str:
@@ -24,7 +24,7 @@ class Metric:
         name: str
             Metric's name
         """
-        return self.name
+        return self._name
 
     @property
     def value(self) -> float:
@@ -36,4 +36,4 @@ class Metric:
         value: float
             Metric's value
         """
-        return self.value
+        return self._value

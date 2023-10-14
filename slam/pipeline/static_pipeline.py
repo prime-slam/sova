@@ -1,4 +1,6 @@
-from slam.octree import Octree
+from octreelib.grid import StaticGrid, StaticGridConfig
+from octreelib.octree import Octree, OctreeConfig
+
 from slam.pipeline.pipeline_base import Pipeline
 from slam.pipeline.result.pipeline_result import PipelineResult
 
@@ -25,13 +27,13 @@ class StaticPipeline(Pipeline):
             Structural pipeline result
         """
         transformed_point_clouds = self.__transform_point_clouds()
-        octree = Octree()  # There will be call of Michael octree implementation
+        grid = StaticGrid(StaticGridConfig(Octree, OctreeConfig()))
 
         for pose_number, point_cloud in enumerate(transformed_point_clouds):
-            octree.insert(pose_number, point_cloud)
+            grid.insert_points(pose_number, point_cloud.points)
 
-        octree.subdivide(self.subdividers)
+        grid.subdivide(self.subdividers)
 
-        octree.filter(self.filters)
+        grid.filter(self.filters)
 
-        return self.backend.process(octree)
+        return self.backend.process(grid)

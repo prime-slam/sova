@@ -1,3 +1,4 @@
 mrob==0.0.12
 numpy==1.25.2
 open3d==0.17.0
+octreelib @ git+https://github.com/true-real-michael/octreelib@e458792a3fe5d3370a2bebd82349868f5d1cbb1a

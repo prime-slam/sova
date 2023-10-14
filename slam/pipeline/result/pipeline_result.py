@@ -19,8 +19,8 @@ class PipelineResult:
     """
 
     def __init__(self, poses: ArrayNx4x4[float], metrics: List[Metric]) -> None:
-        self.poses: ArrayNx4x4[float] = poses
-        self.metrics: List[Metric] = metrics
+        self._poses: ArrayNx4x4[float] = poses
+        self._metrics: List[Metric] = metrics
 
     @property
     def poses(self) -> ArrayNx4x4[float]:
@@ -44,4 +44,4 @@ class PipelineResult:
         string: str
             String representation of pipeline result
         """
-        return "\n".join([f"{metric.name}: {metric.value}" for metric in self.metrics])
+        return "\n".join([f"{metric.name}: {metric.value}" for metric in self._metrics])
