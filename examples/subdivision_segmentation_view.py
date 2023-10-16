@@ -5,6 +5,7 @@ from octreelib.octree import Octree, OctreeConfig
 
 import argparse
 import os
+import random
 import sys
 from typing import List
 
@@ -51,6 +52,7 @@ def read_poses(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="StaticPipeline")
     parser.add_argument("--data_directory", type=str, required=True)
+    parser.add_argument("--diff", type=bool, required=False, default=False)
     args = parser.parse_args()
 
     point_clouds_directory = os.path.join(args.data_directory, "clouds")
@@ -87,5 +89,14 @@ if __name__ == "__main__":
     )
     grid.subdivide(subdividers)
     grid.map_leaf_points(segmenter)
-    o3d.visualization.draw(grid.get_points(0))
-    # Visualiser.draw(grid=grid)
+    Visualiser.draw(grid=grid)
+
+    if args.diff:
+        random.seed(42)
+        segmented_points_cloud = o3d.geometry.PointCloud(
+            o3d.utility.Vector3dVector(grid.get_points(0))
+        )
+        segmented_points_cloud.paint_uniform_color(
+            [random.random(), random.random(), random.random()]
+        )
+        o3d.visualization.draw(segmented_points_cloud)

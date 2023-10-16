@@ -1,2 +1,1 @@
-from slam import (backend, filter, pipeline, segmenter, subdivider, typing,
-                  utils)
+from slam import backend, filter, pipeline, segmenter, subdivider, typing, utils
