@@ -32,4 +32,4 @@ class CountSubdivider(Subdivider):
         should_be_split: bool
             Returns False if number of points in given point cloud more than predefined value, otherwise returns False
         """
-        return len(points) <= self.count
+        return len(points) >= self.count
