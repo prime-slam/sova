@@ -1,20 +1,22 @@
 import vtk
-from octreelib.grid import GridBase
-from octreelib.octree import OctreeBase, OctreeNodeBase
+from octreelib.grid import StaticGrid
+from octreelib.octree import Octree, OctreeNode
 
 from typing import List
 
 __all__ = ["Visualiser"]
 
+from vtkmodules.vtkCommonColor import vtkNamedColors
+
 
 class Visualiser:
     @staticmethod
-    def draw(grid: GridBase):
+    def draw(grid: StaticGrid):
         actors = Visualiser.__grid_actors(grid)
         Visualiser.__run_visualization(actors)
 
     @staticmethod
-    def __visualize_octree(octree: OctreeBase):
+    def __visualize_octree(octree: Octree):
         actors = Visualiser.__octree_actors(octree)
         Visualiser.__run_visualization(actors)
 
@@ -44,8 +46,8 @@ class Visualiser:
         interactor.Start()
 
     @staticmethod
-    def __octree_actors(octree: OctreeBase):
-        def octree_node_actors(node: OctreeNodeBase):
+    def __octree_actors(octree: Octree):
+        def octree_node_actors(node: OctreeNode):
             if node.has_children:
                 return sum([octree_node_actors(child) for child in node.children], [])
             bounds = [
@@ -67,11 +69,35 @@ class Visualiser:
             cube_actor.GetProperty().SetRepresentationToWireframe()
             cube_actor.GetProperty().SetLineWidth(2.0)
 
-            return [cube_actor]
+            points = vtk.vtkPoints()
+            cells = vtk.vtkCellArray()
+            for point in node.points:
+                point_id = points.InsertNextPoint(point[:])
+                cells.InsertNextCell(1)
+                cells.InsertCellPoint(point_id)
+
+                points.Modified()
+                cells.Modified()
+
+            input_data = vtk.vtkPolyData()
+            input_data.SetPoints(points)
+            input_data.SetVerts(cells)
+
+            points_mapper = vtk.vtkPolyDataMapper()
+            points_mapper.SetInputData(input_data)
+
+            colors = vtkNamedColors()
+            points_actor = vtk.vtkActor()
+            points_actor.SetMapper(points_mapper)
+            points_actor.GetProperty().SetColor(colors.GetColor3d("Green"))
+            points_actor.GetProperty().SetPointSize(3)
+
+            return [cube_actor, points_actor]
 
         return octree_node_actors(octree.root)
 
-    def __grid_actors(grid: GridBase):
+    @staticmethod
+    def __grid_actors(grid: StaticGrid):
         return sum(
             [Visualiser.__octree_actors(octree) for octree in grid.octrees.values()], []
         )

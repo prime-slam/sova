@@ -8,13 +8,12 @@ import os
 import sys
 from typing import List
 
-from slam.segmenter import RansacSegmenter
-from slam.utils import Visualiser
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
+    from slam.segmenter import RansacSegmenter
     from slam.subdivider import CountSubdivider
     from slam.typing import ArrayNx4x4
+    from slam.utils import Visualiser
 
 
 def read_point_clouds(
@@ -76,13 +75,17 @@ if __name__ == "__main__":
     ]
 
     segmenter = RansacSegmenter(
-        threshold=0.01,
+        threshold=0.1,
         initial_points=3,
         iterations=5000,
     )
 
     grid = StaticGrid(StaticGridConfig(Octree, OctreeConfig()))
-    grid.insert_points(0, point_cloud.points)
+    grid.insert_points(
+        pose_number=0,
+        points=point_cloud.points,
+    )
     grid.subdivide(subdividers)
     grid.map_leaf_points(segmenter)
-    Visualiser.draw(grid=grid)
+    o3d.visualization.draw(grid.get_points(0))
+    # Visualiser.draw(grid=grid)
