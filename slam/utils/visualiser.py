@@ -18,7 +18,7 @@ class Visualiser:
         plot += k3d.points(
             positions=points,
             point_size=0.1,
-            shader='3d',
+            shader="3d",
         )
 
         vertices = Visualiser.__get_voxels_vertices(grid)
@@ -34,11 +34,11 @@ class Visualiser:
                     [4, 5, 5, 7, 7, 6, 6, 4],
                 ],
                 width=0.01,
-                color=0xff0000,
+                color=0xFF0000,
                 indices_type="segment",
             )
 
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             f.write(plot.get_snapshot())
 
     @staticmethod
@@ -70,6 +70,11 @@ class Visualiser:
 
                 return corners
 
-            return [[node.corner + offset for offset in itertools.product([0, node.edge_length], repeat=3)]]
+            return [
+                [
+                    node.corner + offset
+                    for offset in itertools.product([0, node.edge_length], repeat=3)
+                ]
+            ]
 
         return get_children_bounds(octree.root)
