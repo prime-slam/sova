@@ -52,6 +52,7 @@ def read_poses(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="StaticPipeline")
     parser.add_argument("--data_directory", type=str, required=True)
+    parser.add_argument("--filename", type=str, required=True)
     parser.add_argument("--diff", type=bool, required=False, default=False)
     args = parser.parse_args()
 
@@ -89,7 +90,7 @@ if __name__ == "__main__":
     )
     grid.subdivide(subdividers)
     grid.map_leaf_points(segmenter)
-    Visualiser.draw(grid=grid)
+    Visualiser.draw(grid=grid, filename=args.filename)
 
     if args.diff:
         random.seed(42)
@@ -99,4 +100,4 @@ if __name__ == "__main__":
         segmented_points_cloud.paint_uniform_color(
             [random.random(), random.random(), random.random()]
         )
-        o3d.visualization.draw(segmented_points_cloud)
+        o3d.visualization.draw(point_cloud + segmented_points_cloud)

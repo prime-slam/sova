@@ -3,3 +3,4 @@ numpy==1.25.2
 open3d==0.17.0
 octreelib @ git+https://github.com/true-real-michael/octreelib@e458792a3fe5d3370a2bebd82349868f5d1cbb1a
 vtk~=9.2.6
+k3d==2.16.0
