@@ -23,7 +23,7 @@ class CAPESegmenter(Segmenter):
 
     def __call__(self, points: ArrayNx3[float]) -> ArrayNx3[float]:
         """
-        Represent count-based subdivider mechanism which returns True/False statement based on points count
+        Represent CAPE planar condition.
 
         Parameters
         ----------
@@ -32,8 +32,8 @@ class CAPESegmenter(Segmenter):
 
         Returns
         -------
-        should_be_split: bool
-            Returns
+        segmented_points: ArrayNx3[float]
+            List of 3D segmented points after processing the CAPE condition
         """
         if len(points) <= 10:
             return []
