@@ -9,4 +9,5 @@ from slam.segmenter.identical import *
 from slam.segmenter.ransac import *
 from slam.segmenter.segmenter import *
 
-__all__ = cape_module.__all__ + count_module.__all__ + segmenter_module.__all__ + ransac_module.__all__ + identical_module.__all__
+__all__ = (cape_module.__all__ + count_module.__all__ + segmenter_module.__all__ +
+           ransac_module.__all__ + identical_module.__all__)
