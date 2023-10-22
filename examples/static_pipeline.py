@@ -6,7 +6,8 @@ import copy
 import os
 import random
 import sys
-from typing import List
+
+from slam.utils import HiltiReader
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
@@ -14,39 +15,6 @@ if True:
     from slam.pipeline import StaticPipeline
     from slam.segmenter.ransac import RansacSegmenter
     from slam.subdivider import CountSubdivider
-    from slam.typing import ArrayNx4x4
-
-
-def read_point_clouds(
-    point_clouds_directory: str, first_number: int, last_number: int
-) -> List[o3d.geometry.PointCloud]:
-    point_clouds = []
-
-    for i in range(first_number, last_number):
-        point_cloud_path = os.path.join(point_clouds_directory, str(i) + ".pcd")
-        point_cloud = o3d.io.read_point_cloud(point_cloud_path)
-
-        point_clouds.append(point_cloud)
-
-    return point_clouds
-
-
-def read_poses(
-    poses_directory: str, first_number: int, last_number: int
-) -> ArrayNx4x4[float]:
-    poses = []
-
-    for i in range(first_number, last_number):
-        pose_path = os.path.join(poses_directory, str(i) + ".txt")
-        pose = np.eye(4)
-        with open(pose_path) as file:
-            lines = file.readlines()
-            for ind, line in enumerate(lines):
-                pose[ind] = list(map(float, line.replace("\n", "").split(" ")))
-
-        poses.append(pose)
-
-    return poses
 
 
 if __name__ == "__main__":
@@ -73,17 +41,19 @@ if __name__ == "__main__":
 
     for ind in range(args.first_point_cloud, args.last_point_cloud, args.step):
         print(f"Processing {ind} to {ind + args.step}...")
-        point_clouds = read_point_clouds(
-            point_clouds_directory=point_clouds_directory,
-            first_number=ind,
-            last_number=ind + args.step,
-        )
+        point_clouds = []
+        poses = []
+        for s in range(
+            args.first_point_cloud * ind, args.first_point_cloud * ind + args.step
+        ):
+            point_cloud_path = os.path.join(point_clouds_directory, str(s) + ".pcd")
+            pose_path = os.path.join(poses_directory, str(s) + ".txt")
 
-        poses = read_poses(
-            poses_directory=poses_directory,
-            first_number=ind,
-            last_number=ind + args.step,
-        )
+            point_cloud = HiltiReader.read_point_cloud(filename=point_cloud_path)
+            pose = HiltiReader.read_pose(filename=pose_path)
+
+            point_clouds.append(point_cloud)
+            poses.append(pose)
 
         backend = EigenFactorBackend(
             poses_number=args.step,
