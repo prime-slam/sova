@@ -1,4 +1,4 @@
-from slam.segmenter import Segmenter
+from slam.segmenter.segmenter import Segmenter
 from slam.typing import ArrayNx3
 
 __all__ = ["CountSegmenter"]
