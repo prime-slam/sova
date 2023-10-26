@@ -47,7 +47,7 @@ class CAPESegmenter(Segmenter):
         decrease_order = np.argsort(eigenvalues)[::-1]
         max_eigenvalue, _, min_eigenvalue = eigenvalues[decrease_order]
 
-        if max_eigenvalue / min_eigenvalue < self.__correlation:
-            return points
+        if max_eigenvalue / min_eigenvalue > self.__correlation:
+            return []
 
-        return []
+        return points
