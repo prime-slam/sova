@@ -34,7 +34,7 @@ jobs:
       - name: Check imports
         uses: isort/isort-action@master
         with:
-          configuration: .isort.cfg
+          configuration: "--settings-file=.isort.cfg --profile=black"
 
       - name: Run flake8
         uses: py-actions/flake8@v2

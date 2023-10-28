@@ -7,15 +7,13 @@ import os
 import random
 import sys
 
-from slam.utils import HiltiReader
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
-    from slam.backend import EigenFactorBackend
+    from slam.backend import BaregBackend, EigenFactorBackend
     from slam.pipeline import StaticPipeline
-    from slam.segmenter.ransac import RansacSegmenter
-    from slam.subdivider import CountSubdivider
-
+    from slam.segmenter import CAPESegmenter, RansacSegmenter
+    from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
+    from slam.utils import HiltiReader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="StaticPipeline")
@@ -29,8 +27,25 @@ if __name__ == "__main__":
     poses_directory = os.path.join(args.data_directory, "poses")
 
     subdividers = [
+        SizeSubdivider(
+            size=0.5,
+        ),
         CountSubdivider(
             count=800,
+        ),
+        EigenValueSubdivider(
+            value=1,
+        ),
+    ]
+
+    segmenters = [
+        RansacSegmenter(
+            threshold=0.01,
+            initial_points=6,
+            iterations=5000,
+        ),
+        CAPESegmenter(
+            correlation=15,
         ),
     ]
 
@@ -43,9 +58,7 @@ if __name__ == "__main__":
         print(f"Processing {ind} to {ind + args.step}...")
         point_clouds = []
         poses = []
-        for s in range(
-            args.first_point_cloud * ind, args.first_point_cloud * ind + args.step
-        ):
+        for s in range(ind, ind + args.step):
             point_cloud_path = os.path.join(point_clouds_directory, str(s) + ".pcd")
             pose_path = os.path.join(poses_directory, str(s) + ".txt")
 
@@ -64,11 +77,7 @@ if __name__ == "__main__":
             point_clouds=point_clouds,
             poses=poses,
             subdividers=subdividers,
-            segmenter=RansacSegmenter(
-                threshold=0.01,
-                initial_points=3,
-                iterations=5000,
-            ),
+            segmenters=segmenters,
             filters=filters,
             backend=backend,
         )
@@ -93,20 +102,16 @@ if __name__ == "__main__":
 
     print(f"Processing all {args.step}'lets...")
 
-    backend = EigenFactorBackend(
+    backend = BaregBackend(
         poses_number=((args.last_point_cloud - args.first_point_cloud) // args.step),
         iterations_number=5000,
     )
 
     pipeline = StaticPipeline(
         point_clouds=optimised_point_clouds,
-        poses=[np.eye(4) for _ in range(len(optimised_point_clouds))],
+        poses=[np.eye(4)] * len(optimised_point_clouds),
         subdividers=subdividers,
-        segmenter=RansacSegmenter(
-            threshold=1,
-            initial_points=3,
-            iterations=5000,
-        ),
+        segmenters=segmenters,
         filters=filters,
         backend=backend,
     )

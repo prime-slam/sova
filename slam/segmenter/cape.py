@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.decomposition import PCA
 
 from slam.segmenter.segmenter import Segmenter
 from slam.typing import ArrayNx3
@@ -16,10 +17,13 @@ class CAPESegmenter(Segmenter):
     ----------
     correlation: float
         Lower bound of max/min eigen values correlation
+    debug: bool = False
+        Represents parameter for printing debug information to stdout
     """
 
-    def __init__(self, correlation: float) -> None:
+    def __init__(self, correlation: float, debug: bool = False) -> None:
         self.__correlation: float = correlation
+        self.__debug: bool = debug
 
     def __call__(self, points: ArrayNx3[float]) -> ArrayNx3[float]:
         """
@@ -38,16 +42,20 @@ class CAPESegmenter(Segmenter):
         if len(points) <= 10:
             return []
 
-        converted_points = np.asarray(points)
-        standardized_data = (
-            converted_points - converted_points.mean(axis=0)
-        ) / converted_points.std(axis=0)
-        covariance_matrix = np.cov(standardized_data, ddof=1, rowvar=False)
-        eigenvalues, _ = np.linalg.eig(covariance_matrix)
-        decrease_order = np.argsort(eigenvalues)[::-1]
-        max_eigenvalue, _, min_eigenvalue = eigenvalues[decrease_order]
+        points = np.asarray(points)
 
-        if max_eigenvalue / min_eigenvalue > self.__correlation:
+        pca = PCA(n_components=3)
+        try:
+            standardized_points = (points - points.mean(axis=0)) / points.std(axis=0)
+            pca.fit_transform(standardized_points)
+            min_eigenvalue, _, max_eigenvalue = sorted(pca.explained_variance_)
+
+            if max_eigenvalue / min_eigenvalue > self.__correlation:
+                return []
+        except Exception as ex:
+            if self.__debug:
+                print(ex)
+
             return []
 
         return points

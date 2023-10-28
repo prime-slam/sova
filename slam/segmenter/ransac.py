@@ -18,6 +18,8 @@ class RansacSegmenter(Segmenter):
         Number of initial points to be considered inliers in each iteration
     iterations: int
         Number of RANSAC iterations
+    debug: bool = False
+        Represents parameter for printing debug information to stdout
     """
 
     def __init__(
@@ -25,6 +27,7 @@ class RansacSegmenter(Segmenter):
         threshold: float = 0.1,
         initial_points: int = 3,
         iterations: int = 5000,
+        debug: bool = False,
     ) -> None:
         if threshold <= 0:
             raise ValueError("Threshold must be positive")
@@ -36,6 +39,7 @@ class RansacSegmenter(Segmenter):
         self.__threshold: float = threshold
         self.__initial_points: int = initial_points
         self.__iterations: int = iterations
+        self.__debug: bool = debug
 
     def __call__(self, points: ArrayNx3[float]) -> ArrayNx3[float]:
         """
@@ -70,8 +74,7 @@ class RansacSegmenter(Segmenter):
 
             return segmented_points
         except Exception as ex:
-            print(
-                f"Size: {len(points)}. There were less than {self.__initial_points} points segmented. {ex}"
-            )
+            if self.__debug:
+                print(ex)
 
         return []
