@@ -17,10 +17,13 @@ class CAPESegmenter(Segmenter):
     ----------
     correlation: float
         Lower bound of max/min eigen values correlation
+    debug: bool = False
+        Represents parameter for printing debug information to stdout
     """
 
-    def __init__(self, correlation: float) -> None:
+    def __init__(self, correlation: float, debug: bool = False) -> None:
         self.__correlation: float = correlation
+        self.__debug: bool = debug
 
     def __call__(self, points: ArrayNx3[float]) -> ArrayNx3[float]:
         """
@@ -40,32 +43,19 @@ class CAPESegmenter(Segmenter):
             return []
 
         points = np.asarray(points)
-        standardized_points = (points - points.mean(axis=0)) / points.std(axis=0)
 
+        pca = PCA(n_components=3)
         try:
             standardized_points = (points - points.mean(axis=0)) / points.std(axis=0)
-            covariance_matrix = np.cov(standardized_points, ddof=1, rowvar=False)
-            eigenvalues, _ = np.linalg.eig(covariance_matrix)
-            decrease_order = np.argsort(eigenvalues)[::-1]
-            max_eigenvalue, mean_eigenvalue, min_eigenvalue = eigenvalues[
-                decrease_order
-            ]
+            pca.fit_transform(standardized_points)
+            min_eigenvalue, _, max_eigenvalue = sorted(pca.explained_variance_)
 
             if max_eigenvalue / min_eigenvalue > self.__correlation:
                 return []
         except Exception as ex:
-            print(ex)
+            if self.__debug:
+                print(ex)
 
-        # pca = PCA(n_components=3)
-        # try:
-        #     pca.fit_transform(standardized_points)
-        #     min_eigenvalue, _, max_eigenvalue = sorted(pca.explained_variance_)
-        #
-        #     if max_eigenvalue / min_eigenvalue > self.__correlation:
-        #         return []
-        # except Exception as ex:
-        #     ax = ex
-        #
-        #     return []
+            return []
 
         return points

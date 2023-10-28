@@ -9,7 +9,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
-    from slam.backend import EigenFactorBackend
+    from slam.backend import EigenFactorBackend, BaregBackend
     from slam.pipeline import StaticPipeline
     from slam.segmenter import RansacSegmenter, CAPESegmenter
     from slam.subdivider import CountSubdivider, SizeSubdivider, EigenValueSubdivider
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
     print(f"Processing all {args.step}'lets...")
 
-    backend = EigenFactorBackend(
+    backend = BaregBackend(
         poses_number=((args.last_point_cloud - args.first_point_cloud) // args.step),
         iterations_number=5000,
     )

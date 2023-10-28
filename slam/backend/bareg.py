@@ -1,19 +1,14 @@
-from typing import Dict
-
-import mrob
 from octreelib.grid import GridBase
-
-from slam.backend.backend import Backend, BackendOutput, Metric
-
-__all__ = ["EigenFactorBackend"]
 
 from slam.backend.mrob_backend import MROBBackend
 
+__all__ = ["BaregBackend"]
 
-class EigenFactorBackend(MROBBackend):
+
+class BaregBackend(MROBBackend):
     def _init_point_clouds(self, grid: GridBase) -> None:
         """
-        Initializes plane features using eigen factor backend
+        Initializes plane features using bareg backend
         """
         for pose_number in range(self._poses_number):
             leaf_voxels = grid.get_leaf_points(
@@ -21,8 +16,8 @@ class EigenFactorBackend(MROBBackend):
             )
             for voxel in leaf_voxels:
                 if voxel.id not in self._planes.keys():
-                    factor_plane_id = self._graph.add_eigen_factor_plane()
-                    self._planes[voxel.id] = factor_plane_id
+                    bareg_plane_id = self._graph.add_bareg_plane()
+                    self._planes[voxel.id] = bareg_plane_id
 
                 self._graph.eigen_factor_plane_add_points_array(
                     planeEigenId=self._planes[voxel.id],
