@@ -1,7 +1,7 @@
-from typing import Dict
-
 import mrob
 from octreelib.grid import GridBase
+
+from typing import Dict
 
 from slam.backend.backend import Backend, BackendOutput, Metric
 

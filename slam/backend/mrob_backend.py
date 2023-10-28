@@ -1,8 +1,8 @@
-from abc import abstractmethod
-from typing import Dict
-
 import mrob
 from octreelib.grid import GridBase
+
+from abc import abstractmethod
+from typing import Dict
 
 from slam.backend.backend import Backend, BackendOutput, Metric
 
@@ -21,6 +21,7 @@ class MROBBackend(Backend):
     iterations_number: int
         Number of iterations that will be produced by MROB-EF backend.
     """
+
     def __init__(self, poses_number: int, iterations_number: int) -> None:
         self._graph: mrob.FGraph = mrob.FGraph()
         self._poses_number: int = poses_number
@@ -33,9 +34,7 @@ class MROBBackend(Backend):
         """
         self._graph.add_node_pose_3d(mrob.geometry.SE3(), mrob.NODE_ANCHOR)
         for _ in range(self._poses_number - 1):
-            self._graph.add_node_pose_3d(
-                mrob.geometry.SE3(), mrob.NODE_STANDARD
-            )
+            self._graph.add_node_pose_3d(mrob.geometry.SE3(), mrob.NODE_STANDARD)
 
     @abstractmethod
     def _init_point_clouds(self, grid: GridBase) -> None:
@@ -64,9 +63,7 @@ class MROBBackend(Backend):
         metrics = [
             Metric(name="FGraph initial error", value=self._graph.chi2(True)),
         ]
-        converge_iterations = self._graph.solve(
-            mrob.LM_ELLIPS, self._iterations_number
-        )
+        converge_iterations = self._graph.solve(mrob.LM_ELLIPS, self._iterations_number)
         while converge_iterations == 0:
             print("Iterations equals 0")
             converge_iterations = self._graph.solve(

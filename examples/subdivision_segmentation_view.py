@@ -1,17 +1,9 @@
 import numpy as np
 import open3d as o3d
-from octreelib.grid import (
-    StaticGrid,
-    StaticGridConfig,
-    GridWithPoints,
-    GridWithPointsConfig,
-)
-from octreelib.octree import (
-    Octree,
-    OctreeConfig,
-    MultiPoseOctree,
-    MultiPoseOctreeConfig,
-)
+from octreelib.grid import (GridWithPoints, GridWithPointsConfig, StaticGrid,
+                            StaticGridConfig)
+from octreelib.octree import (MultiPoseOctree, MultiPoseOctreeConfig, Octree,
+                              OctreeConfig)
 
 import argparse
 import os
@@ -20,8 +12,9 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
-    from slam.segmenter import RansacSegmenter, CAPESegmenter
-    from slam.subdivider import CountSubdivider, SizeSubdivider, EigenValueSubdivider
+    from slam.segmenter import CAPESegmenter, RansacSegmenter
+    from slam.subdivider import (CountSubdivider, EigenValueSubdivider,
+                                 SizeSubdivider)
     from slam.utils import HiltiReader, Visualiser
 
 if __name__ == "__main__":

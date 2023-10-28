@@ -9,10 +9,11 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
-    from slam.backend import EigenFactorBackend, BaregBackend
+    from slam.backend import BaregBackend, EigenFactorBackend
     from slam.pipeline import StaticPipeline
-    from slam.segmenter import RansacSegmenter, CAPESegmenter
-    from slam.subdivider import CountSubdivider, SizeSubdivider, EigenValueSubdivider
+    from slam.segmenter import CAPESegmenter, RansacSegmenter
+    from slam.subdivider import (CountSubdivider, EigenValueSubdivider,
+                                 SizeSubdivider)
     from slam.utils import HiltiReader
 
 if __name__ == "__main__":
