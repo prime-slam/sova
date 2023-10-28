@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.decomposition import PCA
 
 from slam.subdivider.subdivider import Subdivider
 from slam.typing import ArrayNx3
@@ -40,10 +41,20 @@ class EigenValueSubdivider(Subdivider):
             return False
 
         points = np.asarray(points)
-        standardized_data = (points - points.mean(axis=0)) / points.std(axis=0)
-        covariance_matrix = np.cov(standardized_data, ddof=1, rowvar=False)
-        eigenvalues, _ = np.linalg.eig(covariance_matrix)
-        decrease_order = np.argsort(eigenvalues)[::-1]
-        _, _, min_eigenvalue = eigenvalues[decrease_order]
+
+        try:
+            standardized_data = (points - points.mean(axis=0)) / points.std(axis=0)
+            covariance_matrix = np.cov(standardized_data, ddof=1, rowvar=False)
+            eigenvalues, _ = np.linalg.eig(covariance_matrix)
+            decrease_order = np.argsort(eigenvalues)[::-1]
+            _, _, min_eigenvalue = eigenvalues[decrease_order]
+        except Exception as e:
+            kek = e
+
+            return False
+
+        # pca = PCA(n_components=3)
+        # pca.fit_transform(standardized_points)
+        # min_eigenvalue, _, _ = sorted(pca.explained_variance_)
 
         return min_eigenvalue > self.__value

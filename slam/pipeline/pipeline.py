@@ -26,8 +26,8 @@ class Pipeline(ABC):
         Poses of given point clouds, that transforms them from local to global coordinates
     subdividers: List[Subdivider]
         Subdivider conditions to subdivide voxels in grid
-    segmenter: Segmenter
-        Segmenter-algorithm which leaves only planar features in voxels
+    segmenters: List[Segmenter]
+        List of segmenter-algorithms which leave only planar features in voxels
     filters: List[Filter]
         Filter conditions to filter voxels in grid
     backend: Backend
@@ -39,7 +39,7 @@ class Pipeline(ABC):
         point_clouds: List[o3d.geometry.PointCloud],
         poses: ArrayNx4x4[float],
         subdividers: List[Subdivider],
-        segmenter: Segmenter,
+        segmenters: List[Segmenter],
         filters: List[Filter],
         backend: Backend,
     ) -> None:
@@ -49,7 +49,7 @@ class Pipeline(ABC):
         self._point_clouds: List[o3d.geometry.PointCloud] = point_clouds
         self._poses: ArrayNx4x4[float] = poses
         self._subdividers: List[Subdivider] = subdividers
-        self._segmenter: Segmenter = segmenter
+        self._segmenters: List[Segmenter] = segmenters
         self._filters: List[Filter] = filters
         self._backend: Backend = backend
 

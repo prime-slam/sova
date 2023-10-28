@@ -1,5 +1,8 @@
-from octreelib.grid import StaticGrid, StaticGridConfig
-from octreelib.octree import Octree, OctreeConfig
+import numpy as np
+from octreelib.grid import GridWithPoints, GridWithPointsConfig
+from octreelib.octree import MultiPoseOctree, MultiPoseOctreeConfig
+
+import math
 
 from slam.backend import BackendOutput
 from slam.pipeline.pipeline import Pipeline
@@ -27,7 +30,13 @@ class StaticPipeline(Pipeline):
             Structural slam output with metrics and optimised poses
         """
         transformed_point_clouds = self._transform_point_clouds()
-        grid = StaticGrid(StaticGridConfig(Octree, OctreeConfig()))
+        grid = GridWithPoints(
+            GridWithPointsConfig(
+                octree_type=MultiPoseOctree,
+                octree_config=MultiPoseOctreeConfig(),
+                min_voxel_size=self.__get_max_distance(transformed_point_clouds),
+            )
+        )
         grid.octrees.clear()  # TODO: wtf??? Why do I need to do this every time?
 
         for pose_number, point_cloud in enumerate(transformed_point_clouds):
@@ -35,8 +44,22 @@ class StaticPipeline(Pipeline):
 
         grid.subdivide(self._subdividers)
 
-        grid.map_leaf_points(self._segmenter)
+        for segmenter in self._segmenters:
+            grid.map_leaf_points(segmenter)
 
         grid.filter(self._filters)
 
         return self._backend.process(grid)
+
+    def __get_max_distance(self, transformed_point_clouds) -> float:
+        maximum = 0
+        for point_cloud in transformed_point_clouds:
+            maximum = max(
+                maximum,
+                np.linalg.norm(
+                    point_cloud.get_max_bound() - point_cloud.get_min_bound()
+                )
+                / math.sqrt(3),
+            )
+
+        return maximum

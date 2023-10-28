@@ -1,3 +1,5 @@
+from typing import Dict
+
 import mrob
 from octreelib.grid import GridBase
 
@@ -22,6 +24,7 @@ class EigenFactorBackend(Backend):
         self.__graph: mrob.FGraph = mrob.FGraph()
         self.__poses_number: int = poses_number
         self.__iterations_number: int = iterations_number
+        self.__planes_id: Dict[int, int] = {}
 
     def process(self, grid: GridBase) -> BackendOutput:
         """
@@ -43,8 +46,18 @@ class EigenFactorBackend(Backend):
         metrics = [
             Metric(name="FGraph initial error", value=self.__graph.chi2(True)),
         ]
-        self.__graph.solve(mrob.LM_ELLIPS, self.__iterations_number)
+        converge_iterations = self.__graph.solve(
+            mrob.LM_ELLIPS, self.__iterations_number
+        )
+        while converge_iterations == 0:
+            print("Iterations equals 0")
+            converge_iterations = self.__graph.solve(
+                mrob.LM_ELLIPS, self.__iterations_number
+            )
 
+        metrics.append(
+            Metric(name="Iterations to converge", value=converge_iterations),
+        )
         metrics.append(
             Metric(name="chi2", value=self.__graph.chi2()),
         )
@@ -68,10 +81,17 @@ class EigenFactorBackend(Backend):
         Inits feature (planes) point clouds in EigenFactor graph.
         """
         for pose_number in range(self.__poses_number):
-            self.__graph.add_eigen_factor_plane()
-            self.__graph.eigen_factor_plane_add_points_array(
-                planeEigenId=pose_number,
-                nodePoseId=pose_number,
-                pointsArray=grid.get_points(pose_number),
-                W=1.0,
+            leaf_voxels = grid.get_leaf_points(
+                pose_number=pose_number,
             )
+            for voxel in leaf_voxels:
+                if voxel.id not in self.__planes_id.keys():
+                    factor_plane_id = self.__graph.add_eigen_factor_plane()
+                    self.__planes_id[voxel.id] = factor_plane_id
+
+                self.__graph.eigen_factor_plane_add_points_array(
+                    planeEigenId=self.__planes_id[voxel.id],
+                    nodePoseId=pose_number,
+                    pointsArray=voxel.points,
+                    W=1.0,
+                )
