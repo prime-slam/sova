@@ -1,9 +1,7 @@
 import numpy as np
 import open3d as o3d
-from octreelib.grid import (GridWithPoints, GridWithPointsConfig, StaticGrid,
-                            StaticGridConfig)
-from octreelib.octree import (MultiPoseOctree, MultiPoseOctreeConfig, Octree,
-                              OctreeConfig)
+from octreelib.grid import GridWithPoints, GridWithPointsConfig
+from octreelib.octree import MultiPoseOctree, MultiPoseOctreeConfig
 
 import argparse
 import os
