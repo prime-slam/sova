@@ -27,7 +27,7 @@ class RansacSegmenter(Segmenter):
         threshold: float = 0.1,
         initial_points: int = 3,
         iterations: int = 5000,
-        debug: bool = False
+        debug: bool = False,
     ) -> None:
         if threshold <= 0:
             raise ValueError("Threshold must be positive")

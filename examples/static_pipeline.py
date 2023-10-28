@@ -12,8 +12,7 @@ if True:
     from slam.backend import BaregBackend, EigenFactorBackend
     from slam.pipeline import StaticPipeline
     from slam.segmenter import CAPESegmenter, RansacSegmenter
-    from slam.subdivider import (CountSubdivider, EigenValueSubdivider,
-                                 SizeSubdivider)
+    from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
     from slam.utils import HiltiReader
 
 if __name__ == "__main__":

@@ -11,8 +11,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
     from slam.segmenter import CAPESegmenter, RansacSegmenter
-    from slam.subdivider import (CountSubdivider, EigenValueSubdivider,
-                                 SizeSubdivider)
+    from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
     from slam.utils import HiltiReader, Visualiser
 
 if __name__ == "__main__":
