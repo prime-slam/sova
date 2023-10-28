@@ -13,7 +13,7 @@ if True:
     from slam.pipeline import StaticPipeline
     from slam.segmenter import CAPESegmenter, RansacSegmenter
     from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
-    from slam.utils import HiltiReader
+    from slam.utils import KittiReader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="StaticPipeline")
@@ -54,19 +54,28 @@ if __name__ == "__main__":
     optimised_point_clouds = []
     random.seed(42)
 
+    pb = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
+
     for ind in range(args.first_point_cloud, args.last_point_cloud, args.step):
         print(f"Processing {ind} to {ind + args.step}...")
         point_clouds = []
         poses = []
         for s in range(ind, ind + args.step):
-            point_cloud_path = os.path.join(point_clouds_directory, str(s) + ".pcd")
+            point_cloud_path = os.path.join(point_clouds_directory, "0" * (6 - len(str(s))) + str(s) + ".bin")
             pose_path = os.path.join(poses_directory, str(s) + ".txt")
 
-            point_cloud = HiltiReader.read_point_cloud(filename=point_cloud_path)
-            pose = HiltiReader.read_pose(filename=pose_path)
+            point_cloud = KittiReader.read_point_cloud(filename=point_cloud_path)
+            pose = KittiReader.read_pose(filename=pose_path)
 
             point_clouds.append(point_cloud)
             poses.append(pose)
+
+            point_cloud_to_insert = copy.deepcopy(point_cloud).transform(pose)
+            point_cloud_to_insert.paint_uniform_color(
+                [random.random(), random.random(), random.random()]
+            )
+
+            pb += point_cloud_to_insert
 
         backend = EigenFactorBackend(
             poses_number=args.step,
