@@ -61,7 +61,9 @@ if __name__ == "__main__":
         point_clouds = []
         poses = []
         for s in range(ind, ind + args.step):
-            point_cloud_path = os.path.join(point_clouds_directory, "0" * (6 - len(str(s))) + str(s) + ".bin")
+            point_cloud_path = os.path.join(
+                point_clouds_directory, "0" * (6 - len(str(s))) + str(s) + ".bin"
+            )
             pose_path = os.path.join(poses_directory, str(s) + ".txt")
 
             point_cloud = KittiReader.read_point_cloud(filename=point_cloud_path)

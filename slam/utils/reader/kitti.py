@@ -1,7 +1,7 @@
-import os.path
-
 import numpy as np
 import open3d as o3d
+
+import os.path
 
 from slam.typing import ArrayNx4x4
 from slam.utils.reader.reader import Reader
@@ -24,14 +24,16 @@ class KittiReader(Reader):
         calibration_file_path = os.path.join(os.path.dirname(filename), "calib.txt")
         with open(calibration_file_path) as file:
             line = file.readlines()[4][4:]
-        calibration_matrix[:3, :4] = np.array(list(map(float, line.rstrip().split(" ")))).reshape(3, 4)
+        calibration_matrix[:3, :4] = np.array(
+            list(map(float, line.rstrip().split(" ")))
+        ).reshape(3, 4)
 
         pose_matrix = np.eye(4)
         with open(filename) as file:
             lines = file.readlines()
-            pose_matrix[:3, :4] = np.array(list(map(float, lines[0].rstrip().split(" ")))).reshape(
-                3, 4
-            )
+            pose_matrix[:3, :4] = np.array(
+                list(map(float, lines[0].rstrip().split(" ")))
+            ).reshape(3, 4)
 
         return pose_matrix @ calibration_matrix
 
