@@ -106,9 +106,13 @@ if __name__ == "__main__":
         )
 
         result = pipeline.run(grid)
-        grid.visualize(VisualizationConfig(
-            filepath=os.path.join(args.visualizations_directory, f"{ind}-{ind + args.step}.html")
-        ))
+        grid.visualize(
+            VisualizationConfig(
+                filepath=os.path.join(
+                    args.visualizations_directory, f"{ind}-{ind + args.step}.html"
+                )
+            )
+        )
         print(f"Processing {ind} to {ind + args.step} result:\n{result}")
 
         optimised_point_clouds_temp = o3d.geometry.PointCloud(
@@ -151,9 +155,11 @@ if __name__ == "__main__":
     )
 
     result = pipeline.run(grid)
-    grid.visualize(VisualizationConfig(
-        filepath=os.path.join(args.visualizations_directory, "map.html")
-    ))
+    grid.visualize(
+        VisualizationConfig(
+            filepath=os.path.join(args.visualizations_directory, "map.html")
+        )
+    )
     print(f"Processing all {args.step}'lets result:\n{result}")
 
     random.seed(42)
