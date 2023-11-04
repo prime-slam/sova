@@ -4,6 +4,8 @@ import copy
 from abc import ABC, abstractmethod
 from typing import List
 
+from octreelib.grid import GridBase
+
 from slam.backend.backend import Backend, BackendOutput
 from slam.filter.filter import Filter
 from slam.segmenter import Segmenter
@@ -54,9 +56,14 @@ class Pipeline(ABC):
         self._backend: Backend = backend
 
     @abstractmethod
-    def run(self) -> BackendOutput:
+    def run(self, grid: GridBase) -> BackendOutput:
         """
         Represents abstract method to run slam and produce output
+
+        Parameters
+        ----------
+        grid: GridBase
+            Grid which will be used for optimizations
 
         Returns
         -------

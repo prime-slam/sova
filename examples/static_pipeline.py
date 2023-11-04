@@ -7,13 +7,16 @@ import os
 import random
 import sys
 
+from octreelib.grid import Grid, GridConfig, VisualizationConfig
+from octreelib.octree import MultiPoseOctree, OctreeConfig
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
     from slam.backend import BaregBackend, EigenFactorBackend
     from slam.pipeline import StaticPipeline
     from slam.segmenter import CAPESegmenter, RansacSegmenter
     from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
-    from slam.utils import KittiReader
+    from slam.utils import HiltiReader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="StaticPipeline")
@@ -21,6 +24,7 @@ if __name__ == "__main__":
     parser.add_argument("--first_point_cloud", type=int, required=True)
     parser.add_argument("--last_point_cloud", type=int, required=True)
     parser.add_argument("--step", type=int, required=True)
+    parser.add_argument("--visualizations_directory", type=str, required=True)
     args = parser.parse_args()
 
     point_clouds_directory = os.path.join(args.data_directory, "clouds")
@@ -62,12 +66,12 @@ if __name__ == "__main__":
         poses = []
         for s in range(ind, ind + args.step):
             point_cloud_path = os.path.join(
-                point_clouds_directory, "0" * (6 - len(str(s))) + str(s) + ".bin"
+                args.data_directory, "clouds", str(s) + ".pcd"
             )
-            pose_path = os.path.join(poses_directory, str(s) + ".txt")
+            pose_path = os.path.join(args.data_directory, "poses", str(s) + ".txt")
 
-            point_cloud = KittiReader.read_point_cloud(filename=point_cloud_path)
-            pose = KittiReader.read_pose(filename=pose_path)
+            point_cloud = HiltiReader.read_point_cloud(filename=point_cloud_path)
+            pose = HiltiReader.read_pose(filename=pose_path)
 
             point_clouds.append(point_cloud)
             poses.append(pose)
@@ -93,7 +97,22 @@ if __name__ == "__main__":
             backend=backend,
         )
 
-        result = pipeline.run()
+        grid = Grid(
+            GridConfig(
+                octree_type=MultiPoseOctree,
+                octree_config=OctreeConfig(),
+                grid_voxel_edge_length=25,
+            )
+        )
+
+        result = pipeline.run(grid)
+        grid.visualize(
+            VisualizationConfig(
+                filepath=os.path.join(
+                    args.visualizations_directory, f"{ind}-{ind + args.step}.html"
+                )
+            )
+        )
         print(f"Processing {ind} to {ind + args.step} result:\n{result}")
 
         optimised_point_clouds_temp = o3d.geometry.PointCloud(
@@ -127,7 +146,20 @@ if __name__ == "__main__":
         backend=backend,
     )
 
-    result = pipeline.run()
+    grid = Grid(
+        GridConfig(
+            octree_type=MultiPoseOctree,
+            octree_config=OctreeConfig(),
+            grid_voxel_edge_length=25,
+        )
+    )
+
+    result = pipeline.run(grid)
+    grid.visualize(
+        VisualizationConfig(
+            filepath=os.path.join(args.visualizations_directory, "map.html")
+        )
+    )
     print(f"Processing all {args.step}'lets result:\n{result}")
 
     random.seed(42)
