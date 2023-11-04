@@ -2,6 +2,7 @@ import open3d as o3d
 
 import copy
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import List
 
 from octreelib.grid import GridBase
@@ -12,7 +13,12 @@ from slam.segmenter import Segmenter
 from slam.subdivider.subdivider import Subdivider
 from slam.typing.hints import ArrayNx4x4
 
-__all__ = ["Pipeline"]
+__all__ = ["PipelineRuntimeParameters", "Pipeline"]
+
+
+@dataclass
+class PipelineRuntimeParameters(ABC):
+    pass
 
 
 class Pipeline(ABC):
@@ -56,12 +62,14 @@ class Pipeline(ABC):
         self._backend: Backend = backend
 
     @abstractmethod
-    def run(self, grid: GridBase) -> BackendOutput:
+    def run(self, parameters: PipelineRuntimeParameters, grid: GridBase) -> BackendOutput:
         """
         Represents abstract method to run slam and produce output
 
         Parameters
         ----------
+        parameters: PipelineRuntimeParameters
+            Represents parameters for `run` function of pipeline
         grid: GridBase
             Grid which will be used for optimizations
 

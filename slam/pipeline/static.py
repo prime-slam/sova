@@ -1,9 +1,25 @@
+from dataclasses import dataclass
+from typing import Optional
+
 from octreelib.grid import GridBase
 
 from slam.backend import BackendOutput
-from slam.pipeline.pipeline import Pipeline
+from slam.pipeline.pipeline import Pipeline, PipelineRuntimeParameters
 
 __all__ = ["StaticPipeline"]
+
+
+@dataclass
+class StaticPipelineRuntimeParameters(PipelineRuntimeParameters):
+    """
+    Represents list of parameters which will be used in `run` function of pipeline
+
+    Parameters
+    ----------
+    key_point_cloud_number: Optional[int]
+        Represents number of the point cloud for which will be called `subdivide` function
+    """
+    key_point_cloud_number: Optional[int] = None
 
 
 class StaticPipeline(Pipeline):
@@ -11,7 +27,7 @@ class StaticPipeline(Pipeline):
     Represents simple static slam implementation
     """
 
-    def run(self, grid: GridBase) -> BackendOutput:
+    def run(self, parameters: StaticPipelineRuntimeParameters, grid: GridBase) -> BackendOutput:
         """
         Represents base slam algorithm:
         1. Transforms point clouds to global coordinates
@@ -19,6 +35,13 @@ class StaticPipeline(Pipeline):
         3. Runs subdivide functions to leave only planar features
         4. Runs filter functions to delete unnecessary voxels/point clouds
         5. Runs chosen backend and produce PipelineOutput
+
+        Parameters
+        ----------
+        parameters: StaticPipelineRuntimeParameters
+            Represents parameters for `run` function of pipeline
+        grid: GridBase
+            Grid which will be used for optimizations
 
         Returns
         -------
