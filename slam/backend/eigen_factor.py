@@ -22,6 +22,6 @@ class EigenFactorBackend(MROBBackend):
                 self._graph.eigen_factor_plane_add_points_array(
                     planeEigenId=self._planes[voxel.id],
                     nodePoseId=pose_number,
-                    pointsArray=voxel.points,
+                    pointsArray=voxel.get_points(),
                     W=1.0,
                 )

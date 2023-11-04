@@ -1,5 +1,5 @@
 import numpy as np
-from octreelib.grid import GridWithPoints, GridWithPointsConfig
+from octreelib.grid import Grid, GridConfig
 from octreelib.octree import MultiPoseOctree, MultiPoseOctreeConfig
 
 import math
@@ -30,14 +30,15 @@ class StaticPipeline(Pipeline):
             Structural slam output with metrics and optimised poses
         """
         transformed_point_clouds = self._transform_point_clouds()
-        grid = GridWithPoints(
-            GridWithPointsConfig(
+        grid = Grid(
+            GridConfig(
                 octree_type=MultiPoseOctree,
                 octree_config=MultiPoseOctreeConfig(),
-                min_voxel_size=self.__get_max_distance(transformed_point_clouds),
+                grid_voxel_edge_length=self.__get_max_distance(
+                    transformed_point_clouds
+                ),
             )
         )
-        grid.octrees.clear()  # TODO: wtf??? Why do I need to do this every time?
 
         for pose_number, point_cloud in enumerate(transformed_point_clouds):
             grid.insert_points(pose_number, point_cloud.points)
