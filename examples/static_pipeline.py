@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
     result = pipeline.run(grid)
     grid.visualize(VisualizationConfig(
-        filepath=os.path.join(args.visualizations_directory, f"map.html")
+        filepath=os.path.join(args.visualizations_directory, "map.html")
     ))
     print(f"Processing all {args.step}'lets result:\n{result}")
 
