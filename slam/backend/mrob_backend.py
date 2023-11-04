@@ -2,7 +2,7 @@ import mrob
 from octreelib.grid import GridBase
 
 from abc import abstractmethod
-from typing import Dict
+from typing import Dict, Optional
 
 from slam.backend.backend import Backend, BackendOutput, Metric
 
@@ -19,11 +19,16 @@ class MROBBackend(Backend):
     poses_number: int
         Number of poses in provided map
     iterations_number: int
-        Number of iterations that will be produced by MROB-EF backend.
+        Number of iterations that will be produced by chosen MROB backend.
     """
 
-    def __init__(self, poses_number: int, iterations_number: int) -> None:
-        self._graph: mrob.FGraph = mrob.FGraph()
+    def __init__(
+        self,
+        poses_number: int,
+        iterations_number: int,
+        robust_type: int = mrob.QUADRATIC,
+    ) -> None:
+        self._graph: mrob.FGraph = mrob.FGraph(robust_type)
         self._poses_number: int = poses_number
         self._iterations_number: int = iterations_number
         self._planes: Dict[int, int] = {}
