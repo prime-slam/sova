@@ -26,7 +26,7 @@ class MROBBackend(Backend):
         self,
         poses_number: int,
         iterations_number: int,
-        robust_type: int = mrob.QUADRATIC,
+        robust_type: int = mrob.HUBER,
     ) -> None:
         self._graph: mrob.FGraph = mrob.FGraph(robust_type)
         self._poses_number: int = poses_number
