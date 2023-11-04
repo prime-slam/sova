@@ -1,7 +1,7 @@
 import numpy as np
 import open3d as o3d
-from octreelib.grid import GridWithPoints, GridWithPointsConfig
-from octreelib.octree import MultiPoseOctree, MultiPoseOctreeConfig
+from octreelib.grid import Grid, GridConfig, VisualizationConfig
+from octreelib.octree import MultiPoseOctree, OctreeConfig
 
 import argparse
 import os
@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
     from slam.segmenter import CAPESegmenter, RansacSegmenter
     from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
-    from slam.utils import HiltiReader, Visualiser
+    from slam.utils import HiltiReader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="StaticPipeline")
@@ -53,11 +53,11 @@ if __name__ == "__main__":
             correlation=15,
         ),
     ]
-    grid = GridWithPoints(
-        GridWithPointsConfig(
+    grid = Grid(
+        GridConfig(
             octree_type=MultiPoseOctree,
-            octree_config=MultiPoseOctreeConfig(),
-            min_voxel_size=16,
+            octree_config=OctreeConfig(),
+            grid_voxel_edge_length=16,
         )
     )
     grid.insert_points(
@@ -67,7 +67,12 @@ if __name__ == "__main__":
     grid.subdivide(subdividers)
     for segmenter in segmenters:
         grid.map_leaf_points(segmenter)
-    Visualiser.draw(grid=grid, filename=args.filename)
+
+    grid.visualize(
+        VisualizationConfig(
+            filepath=args.filename,
+        )
+    )
 
     if args.diff:
         random.seed(42)

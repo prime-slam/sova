@@ -1,3 +1,5 @@
+import numpy as np
+
 from slam.segmenter.segmenter import Segmenter
 from slam.typing import ArrayNx3
 
@@ -35,6 +37,6 @@ class CountSegmenter(Segmenter):
             List of 3D segmented points after processing the count-filter
         """
         if len(points) <= self.__count:
-            return []
+            return np.empty((0, 3), dtype=float)
 
         return points

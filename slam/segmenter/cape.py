@@ -40,7 +40,7 @@ class CAPESegmenter(Segmenter):
             List of 3D segmented points after processing the CAPE condition
         """
         if len(points) <= 10:
-            return []
+            return np.empty((0, 3), dtype=float)
 
         points = np.asarray(points)
 
@@ -51,11 +51,11 @@ class CAPESegmenter(Segmenter):
             min_eigenvalue, _, max_eigenvalue = sorted(pca.explained_variance_)
 
             if max_eigenvalue / min_eigenvalue > self.__correlation:
-                return []
+                return np.empty((0, 3), dtype=float)
         except Exception as ex:
             if self.__debug:
                 print(ex)
 
-            return []
+            return np.empty((0, 3), dtype=float)
 
         return points

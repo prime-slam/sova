@@ -1,3 +1,4 @@
+import numpy as np
 import open3d as o3d
 
 from slam.segmenter.segmenter import Segmenter
@@ -68,13 +69,10 @@ class RansacSegmenter(Segmenter):
 
             # TODO: Remove after migration to numpy in octreelib
             inlier_cloud = point_cloud.select_by_index(inliers)
-            segmented_points = []
-            for point in inlier_cloud.points:
-                segmented_points.append(point)
 
-            return segmented_points
+            return inlier_cloud.points
         except Exception as ex:
             if self.__debug:
                 print(ex)
 
-        return []
+        return np.empty((0, 3), dtype=float)
