@@ -62,7 +62,9 @@ class Pipeline(ABC):
         self._backend: Backend = backend
 
     @abstractmethod
-    def run(self, parameters: PipelineRuntimeParameters, grid: GridBase) -> BackendOutput:
+    def run(
+        self, parameters: PipelineRuntimeParameters, grid: GridBase
+    ) -> BackendOutput:
         """
         Represents abstract method to run slam and produce output
 

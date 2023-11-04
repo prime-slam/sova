@@ -13,7 +13,7 @@ from octreelib.octree import MultiPoseOctree, OctreeConfig
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if True:
     from slam.backend import BaregBackend, EigenFactorBackend
-    from slam.pipeline import StaticPipeline
+    from slam.pipeline import StaticPipeline, StaticPipelineRuntimeParameters
     from slam.segmenter import CAPESegmenter, RansacSegmenter
     from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
     from slam.utils import HiltiReader
@@ -105,7 +105,7 @@ if __name__ == "__main__":
             )
         )
 
-        result = pipeline.run(grid)
+        result = pipeline.run(StaticPipelineRuntimeParameters(), grid)
         grid.visualize(
             VisualizationConfig(
                 filepath=os.path.join(
@@ -154,7 +154,7 @@ if __name__ == "__main__":
         )
     )
 
-    result = pipeline.run(grid)
+    result = pipeline.run(StaticPipelineRuntimeParameters(), grid)
     grid.visualize(
         VisualizationConfig(
             filepath=os.path.join(args.visualizations_directory, "map.html")
