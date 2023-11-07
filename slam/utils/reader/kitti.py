@@ -42,8 +42,4 @@ class KittiReader(Reader):
         """
         Reads point cloud from KITTI dataset
         """
-        points = np.fromfile(filename, dtype=np.float32).reshape(-1, 4)
-        point_cloud = o3d.geometry.PointCloud()
-        point_cloud.points = o3d.utility.Vector3dVector(points[:, :3])
-
-        return point_cloud
+        return o3d.io.read_point_cloud(filename)
