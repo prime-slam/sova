@@ -34,6 +34,12 @@ if __name__ == "__main__":
         SizeSubdivider(
             size=2,
         ),
+        CountSubdivider(
+            count=800,
+        ),
+        EigenValueSubdivider(
+            value=1,
+        ),
     ]
 
     segmenters = [
@@ -41,6 +47,9 @@ if __name__ == "__main__":
             threshold=0.01,
             initial_points=6,
             iterations=5000,
+        ),
+        CAPESegmenter(
+            correlation=15,
         ),
     ]
 
