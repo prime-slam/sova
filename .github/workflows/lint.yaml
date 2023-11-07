@@ -28,7 +28,7 @@ jobs:
       - name: Check code typos
         uses: crate-ci/typos@master
         with:
-          files: .
+          files: ./slam ./examples
           config: _typos.toml
 
       - name: Check imports
