@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     subdividers = [
         SizeSubdivider(
-            size=0.5,
+            size=2,
         ),
         CountSubdivider(
             count=800,
@@ -101,7 +101,7 @@ if __name__ == "__main__":
             GridConfig(
                 octree_type=MultiPoseOctree,
                 octree_config=OctreeConfig(),
-                grid_voxel_edge_length=25,
+                grid_voxel_edge_length=4,
             )
         )
 
