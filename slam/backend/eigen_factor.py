@@ -16,7 +16,7 @@ class EigenFactorBackend(MROBBackend):
             )
             for voxel in leaf_voxels:
                 if voxel.id not in self._planes.keys():
-                    factor_plane_id = self._graph.add_eigen_factor_plane()
+                    factor_plane_id = self._graph.add_eigen_factor_plane_center()
                     self._planes[voxel.id] = factor_plane_id
 
                 self._graph.eigen_factor_plane_add_points_array(
