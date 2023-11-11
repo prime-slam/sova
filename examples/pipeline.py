@@ -155,11 +155,13 @@ if __name__ == "__main__":
                 point_clouds, poses, output.poses
             ):
                 color = [random.random(), random.random(), random.random()]
-                point_cloud_to_insert = copy.deepcopy(point_cloud).transform(initial_pose)
-                point_cloud_to_insert.paint_uniform_color(color)
+                before = copy.deepcopy(point_cloud).transform(initial_pose)
+                before.paint_uniform_color(color)
+                initial_point_cloud += before
 
-                initial_point_cloud += point_cloud_to_insert
-                optimised_point_cloud += point_cloud_to_insert
+                after = copy.deepcopy(point_cloud).transform(initial_pose).transform(optimised_pose)
+                after.paint_uniform_color(color)
+                optimised_point_cloud += after
 
             print("Initial point clouds is going to printed")
             o3d.visualization.draw(initial_point_cloud)
