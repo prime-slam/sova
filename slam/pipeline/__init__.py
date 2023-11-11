@@ -1,6 +1,6 @@
 import slam.pipeline.pipeline as pipeline_module
-import slam.pipeline.static as static_module
+import slam.pipeline.sequential_pipeline as sequential_pipeline_module
 from slam.pipeline.pipeline import *
-from slam.pipeline.static import *
+from slam.pipeline.sequential_pipeline import *
 
-__all__ = pipeline_module.__all__ + static_module.__all__
+__all__ = pipeline_module.__all__ + sequential_pipeline_module.__all__

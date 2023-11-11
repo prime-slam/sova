@@ -19,7 +19,9 @@ class MROBBackend(Backend):
     poses_number: int
         Number of poses in provided map
     iterations_number: int
-        Number of iterations that will be produced by chosen MROB backend.
+        Number of iterations that will be produced by chosen MROB backend
+    robust_type: int
+        Represents type of robust optimisations
     """
 
     def __init__(
@@ -45,6 +47,11 @@ class MROBBackend(Backend):
     def _init_point_clouds(self, grid: GridBase) -> None:
         """
         Represents abstract method for initiating plane features
+
+        Parameters
+        ----------
+        grid: GridBase
+            Represents grid with all inserted point clouds
         """
         pass
 
@@ -70,7 +77,7 @@ class MROBBackend(Backend):
         ]
         converge_iterations = self._graph.solve(mrob.LM_ELLIPS, self._iterations_number)
         while converge_iterations == 0:
-            print("Iterations equals 0")
+            print("Optimization didn't converge")
             converge_iterations = self._graph.solve(
                 mrob.LM_ELLIPS, self._iterations_number
             )

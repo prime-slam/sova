@@ -45,7 +45,7 @@ class Metric:
 
 class BackendOutput:
     """
-    Represents slam result (output) with all necessary artifacts
+    Represents SLAM result (output) with all necessary artifacts
 
     Parameters
     ----------
@@ -73,28 +73,27 @@ class BackendOutput:
 
     def __str__(self) -> str:
         """
-        Represents implementation of str dunder method to produce slam result pretty print
+        Represents implementation of str dunder method to produce SLAM output pretty print
 
         Returns
         -------
         string: str
-            String representation of slam result
+            String representation of SLAM result
         """
         return "\n".join(
-            [f" {metric.name}: {metric.value}" for metric in self._metrics]
+            [f"\t{metric.name}: {metric.value}" for metric in self._metrics]
         )
 
 
 class Backend(ABC):
     """
-    Represents base (abstract) class for backend implementations
+    Represents base (abstract) class for SLAM backend
     """
 
     @abstractmethod
     def process(self, grid: GridBase) -> BackendOutput:
         """
-        Represents base method of backend, which should produce Pipeline result by
-        given octree
+        Represents base method of backend, which produces BackendOutput by given Grid.
 
         Parameters
         ----------
@@ -103,7 +102,7 @@ class Backend(ABC):
 
         Returns
         -------
-        output: PipelineOutput
+        output: BackendOutput
             Result of backend optimisations
         """
         pass

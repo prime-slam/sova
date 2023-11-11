@@ -1,11 +1,10 @@
 import open3d as o3d
+from octreelib.grid import GridConfigBase, VisualizationConfig
 
 import copy
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List
-
-from octreelib.grid import GridBase
 
 from slam.backend.backend import Backend, BackendOutput
 from slam.filter.filter import Filter
@@ -18,12 +17,24 @@ __all__ = ["PipelineRuntimeParameters", "Pipeline"]
 
 @dataclass
 class PipelineRuntimeParameters(ABC):
-    pass
+    """
+    Represents parameters for pipeline to run
+
+    Parameters
+    ----------
+    initial_voxel_size: float
+        Represents initial size of voxel in Grid
+    visualization_config: VisualizationConfig
+        Represents configuration for result visualization
+    """
+
+    initial_voxel_size: float = 10
+    visualization_config: VisualizationConfig = VisualizationConfig()
 
 
 class Pipeline(ABC):
     """
-    Represents abstract slam, which takes point clouds (and poses) and produces optimised poses
+    Represents abstract class for SLAM pipeline which takes point clouds (and poses) and produces optimised poses
     with relevant optimising metrics
 
     Parameters
@@ -62,23 +73,19 @@ class Pipeline(ABC):
         self._backend: Backend = backend
 
     @abstractmethod
-    def run(
-        self, parameters: PipelineRuntimeParameters, grid: GridBase
-    ) -> BackendOutput:
+    def run(self, parameters: PipelineRuntimeParameters) -> BackendOutput:
         """
         Represents abstract method to run slam and produce output
 
         Parameters
         ----------
         parameters: PipelineRuntimeParameters
-            Represents parameters for `run` function of pipeline
-        grid: GridBase
-            Grid which will be used for optimizations
+            Represents utility parameters to run pipeline
 
         Returns
         -------
-        result: PipelineResult
-            Structural slam result
+        output: BackendOutput
+            Structural SLAM result, which contains optimized poses and related metrics
         """
         pass
 
