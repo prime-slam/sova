@@ -61,9 +61,7 @@ class SequentialPipeline(Pipeline):
 
         grid.filter(self._filters)
 
-        output = self._backend.process(grid)
-
         grid.visualize(parameters.visualization_config)
         print(f"Visualization was saved to {parameters.visualization_config.filepath}")
 
-        return output
+        return self._backend.process(grid)
