@@ -1,5 +1,4 @@
-from octreelib.grid import Grid, GridConfig
-from octreelib.octree import MultiPoseOctree, OctreeConfig
+from octreelib.grid import Grid
 
 from dataclasses import dataclass
 
