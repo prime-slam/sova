@@ -43,7 +43,7 @@ python3 examples/pipeline.py \
 ```
 """
 import open3d as o3d
-from octreelib.grid import VisualizationConfig
+from octreelib.grid import VisualizationConfig, GridConfig
 
 import argparse
 import copy
@@ -51,10 +51,12 @@ import os
 import random
 import sys
 
+from octreelib.octree import OctreeConfig, MultiPoseOctree
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.backend import EigenFactorBackend, BaregBackend
+from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
-from slam.segmenter import CAPESegmenter, RansacSegmenter
+from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
 from slam.utils import HiltiReader, KittiReader, Reader
 
@@ -81,8 +83,6 @@ if __name__ == "__main__":
 
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
-    initial_voxel_size = 8
-
     subdividers = [
         SizeSubdivider(
             size=4,
@@ -98,10 +98,18 @@ if __name__ == "__main__":
     ]
 
     filters = []
+
+    grid_configuration = GridConfig(
+        octree_type=MultiPoseOctree,
+        octree_config=OctreeConfig(),
+        grid_voxel_edge_length=8,
+    )
     # End of pipeline specification section
     # Do not touch code below, just run it :)
 
-    for ind in range(args.first_point_cloud_number, args.last_point_cloud_number, args.step):
+    for ind in range(
+        args.first_point_cloud_number, args.last_point_cloud_number, args.step
+    ):
         start = ind
         end = min(args.last_point_cloud_number, ind + args.step)
 
@@ -138,7 +146,7 @@ if __name__ == "__main__":
 
         output = pipeline.run(
             SequentialPipelineRuntimeParameters(
-                initial_voxel_size=initial_voxel_size,
+                grid_configuration=grid_configuration,
                 visualization_config=VisualizationConfig(
                     filepath=f"{args.visualizations_directory}/{start}-{end-1}.html"
                 ),
@@ -150,7 +158,9 @@ if __name__ == "__main__":
         if args.diff:
             random.seed(42)
             initial_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
-            optimised_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
+            optimised_point_cloud = o3d.geometry.PointCloud(
+                o3d.utility.Vector3dVector()
+            )
             for point_cloud, initial_pose, optimised_pose in zip(
                 point_clouds, poses, output.poses
             ):
@@ -159,7 +169,11 @@ if __name__ == "__main__":
                 before.paint_uniform_color(color)
                 initial_point_cloud += before
 
-                after = copy.deepcopy(point_cloud).transform(initial_pose).transform(optimised_pose)
+                after = (
+                    copy.deepcopy(point_cloud)
+                    .transform(initial_pose)
+                    .transform(optimised_pose)
+                )
                 after.paint_uniform_color(color)
                 optimised_point_cloud += after
 

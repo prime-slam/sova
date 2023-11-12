@@ -39,8 +39,8 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.segmenter import CAPESegmenter, RansacSegmenter
-from slam.subdivider import CountSubdivider, EigenValueSubdivider, SizeSubdivider
+from slam.segmenter import RansacSegmenter
+from slam.subdivider import SizeSubdivider
 from slam.utils import HiltiReader, KittiReader, Reader
 
 if __name__ == "__main__":
@@ -62,7 +62,9 @@ if __name__ == "__main__":
     point_cloud_path = os.path.join(
         args.data_directory, "clouds", str(args.point_cloud_number) + ".pcd"
     )
-    pose_path = os.path.join(args.data_directory, "poses", str(args.point_cloud_number) + ".txt")
+    pose_path = os.path.join(
+        args.data_directory, "poses", str(args.point_cloud_number) + ".txt"
+    )
 
     point_cloud = reader.read_point_cloud(filename=point_cloud_path)
     pose = reader.read_pose(filename=pose_path)

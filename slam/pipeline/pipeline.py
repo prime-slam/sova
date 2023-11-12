@@ -1,5 +1,5 @@
 import open3d as o3d
-from octreelib.grid import GridConfigBase, VisualizationConfig
+from octreelib.grid import GridConfig, VisualizationConfig
 
 import copy
 from abc import ABC, abstractmethod
@@ -22,13 +22,13 @@ class PipelineRuntimeParameters(ABC):
 
     Parameters
     ----------
-    initial_voxel_size: float
-        Represents initial size of voxel in Grid
+    grid_configuration: GridConfig
+        Represents octreelib Grid configuration
     visualization_config: VisualizationConfig
         Represents configuration for result visualization
     """
 
-    initial_voxel_size: float = 10
+    grid_configuration: GridConfig = GridConfig
     visualization_config: VisualizationConfig = VisualizationConfig()
 
 

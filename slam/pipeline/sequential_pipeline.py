@@ -44,13 +44,7 @@ class SequentialPipeline(Pipeline):
         """
         transformed_point_clouds = self._transform_point_clouds()
 
-        grid = Grid(
-            GridConfig(
-                octree_type=MultiPoseOctree,
-                octree_config=OctreeConfig(),
-                grid_voxel_edge_length=parameters.initial_voxel_size,
-            )
-        )
+        grid = Grid(parameters.grid_configuration)
 
         grid.insert_points(
             parameters.initial_point_cloud_number,
