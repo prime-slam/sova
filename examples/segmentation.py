@@ -72,13 +72,7 @@ if __name__ == "__main__":
     # TODO(user): You can manipulate configuration specification below as you want
     subdividers = [
         SizeSubdivider(
-            size=0.5,
-        ),
-        CountSubdivider(
-            count=800,
-        ),
-        EigenValueSubdivider(
-            value=1,
+            size=4,
         ),
     ]
 
@@ -88,16 +82,13 @@ if __name__ == "__main__":
             initial_points=6,
             iterations=5000,
         ),
-        CAPESegmenter(
-            correlation=15,
-        ),
     ]
 
     grid = Grid(
         GridConfig(
             octree_type=MultiPoseOctree,
             octree_config=OctreeConfig(),
-            grid_voxel_edge_length=16,
+            grid_voxel_edge_length=8,
         )
     )
     # End of specification section

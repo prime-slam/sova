@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     subdividers = [
         SizeSubdivider(
-            size=2,
+            size=4,
         ),
     ]
 
@@ -95,9 +95,6 @@ if __name__ == "__main__":
             initial_points=6,
             iterations=5000,
         ),
-        CAPESegmenter(
-            correlation=100,
-        ),
     ]
 
     filters = []
@@ -105,11 +102,14 @@ if __name__ == "__main__":
     # Do not touch code below, just run it :)
 
     for ind in range(args.first_point_cloud_number, args.last_point_cloud_number, args.step):
-        print(f"Processing {ind} to {ind + args.step}...")
+        start = ind
+        end = min(args.last_point_cloud_number, ind + args.step)
+
+        print(f"Processing {start} to {end}...")
 
         point_clouds = []
         poses = []
-        for s in range(ind, ind + args.step):
+        for s in range(start, end):
             point_cloud_path = os.path.join(
                 args.data_directory, "clouds", str(s) + ".pcd"
             )
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             SequentialPipelineRuntimeParameters(
                 initial_voxel_size=initial_voxel_size,
                 visualization_config=VisualizationConfig(
-                    filepath=f"{args.visualizations_directory}/{ind}-{ind + args.step}.html"
+                    filepath=f"{args.visualizations_directory}/{start}-{end}.html"
                 ),
                 initial_point_cloud_number=len(point_clouds) // 2,
             )
