@@ -2,12 +2,12 @@
 This script contains example of running pipeline.
 Options could be changed in the appropriate place of this script, and that's only thing that user may change (and also type of backend).
 
-Flow of pipeline optimising one patch:
+Flow of pipeline:
 1. Inserts initial point cloud into Grid and subdivides it
 2. Inserts remaining point clouds into Grid
 3. Runs Segmenters criteria into Grid
-4. Runs filter functions to delete unnecessary voxels/point clouds
-5. Runs chosen backend and produce BackendOutput result with all necessary information
+4. Runs Filter functions to delete unnecessary voxels/point clouds
+5. Runs chosen backend and produces BackendOutput result with all necessary information
 6. Saves visualization to specified directory
 
 Arguments of CLI:
@@ -37,7 +37,7 @@ python3 examples/pipeline.py \
     --data_directory evaluation/hilti \
     --first_point_cloud_number 0 \
     --last_point_cloud_number 27 \
-    --step 27 \
+    --step 4 \
     --visualizations_directory visualizations \
     --diff True
 ```
@@ -177,7 +177,7 @@ if __name__ == "__main__":
                 after.paint_uniform_color(color)
                 optimised_point_cloud += after
 
-            print("Initial point clouds is going to printed")
+            print("Initial point clouds is going to be printed")
             o3d.visualization.draw(initial_point_cloud)
-            print("Optimised point clouds is going to printed")
+            print("Optimised point clouds is going to be printed")
             o3d.visualization.draw(optimised_point_cloud)
