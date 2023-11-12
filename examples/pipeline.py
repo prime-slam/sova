@@ -52,7 +52,7 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.backend import EigenFactorBackend
+from slam.backend import EigenFactorBackend, BaregBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.segmenter import CAPESegmenter, RansacSegmenter
 from slam.subdivider import SizeSubdivider
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         start = ind
         end = min(args.last_point_cloud_number, ind + args.step)
 
-        print(f"Processing {start} to {end}...")
+        print(f"Processing {start} to {end-1}...")
 
         point_clouds = []
         poses = []
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             SequentialPipelineRuntimeParameters(
                 initial_voxel_size=initial_voxel_size,
                 visualization_config=VisualizationConfig(
-                    filepath=f"{args.visualizations_directory}/{start}-{end}.html"
+                    filepath=f"{args.visualizations_directory}/{start}-{end-1}.html"
                 ),
                 initial_point_cloud_number=len(point_clouds) // 2,
             )
