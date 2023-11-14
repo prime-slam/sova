@@ -78,9 +78,6 @@ if __name__ == "__main__":
     else:
         raise ValueError("Unrecognisable type of dataset")
 
-    point_clouds_directory = os.path.join(args.data_directory, "clouds")
-    poses_directory = os.path.join(args.data_directory, "poses")
-
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
     subdividers = [
@@ -116,7 +113,7 @@ if __name__ == "__main__":
         print(f"Processing {start} to {end-1}...")
 
         point_clouds = []
-        poses = []
+        initial_poses = []
         for s in range(start, end):
             point_cloud_path = os.path.join(
                 args.data_directory, "clouds", str(s) + ".pcd"
@@ -124,10 +121,10 @@ if __name__ == "__main__":
             pose_path = os.path.join(args.data_directory, "poses", str(s) + ".txt")
 
             point_cloud = reader.read_point_cloud(filename=point_cloud_path)
-            pose = reader.read_pose(filename=pose_path)
+            initial_pose = reader.read_pose(filename=pose_path)
 
             point_clouds.append(point_cloud)
-            poses.append(pose)
+            initial_poses.append(initial_pose)
 
         # TODO(user): You can also change Backend type
         backend = EigenFactorBackend(
@@ -137,7 +134,7 @@ if __name__ == "__main__":
 
         pipeline = SequentialPipeline(
             point_clouds=point_clouds,
-            poses=poses,
+            poses=initial_poses,
             subdividers=subdividers,
             segmenters=segmenters,
             filters=filters,
@@ -162,7 +159,7 @@ if __name__ == "__main__":
                 o3d.utility.Vector3dVector()
             )
             for point_cloud, initial_pose, optimised_pose in zip(
-                point_clouds, poses, output.poses
+                point_clouds, initial_poses, output.poses
             ):
                 color = [random.random(), random.random(), random.random()]
                 before = copy.deepcopy(point_cloud).transform(initial_pose)
