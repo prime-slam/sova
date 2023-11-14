@@ -8,7 +8,12 @@ __all__ = ["BaregBackend"]
 class BaregBackend(MROBBackend):
     def _init_point_clouds(self, grid: GridBase) -> None:
         """
-        Initializes plane features using bareg backend
+        Initializes plane features in graph using bareg backend
+
+        Parameters
+        ----------
+        grid: GridBase
+            Represents grid with all inserted point clouds
         """
         for pose_number in range(self._poses_number):
             leaf_voxels = grid.get_leaf_points(

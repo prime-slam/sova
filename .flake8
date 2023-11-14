@@ -1,5 +1,5 @@
 [flake8]
 per-file-ignores =
     __init__.py:F401,F403
-exclude = venv,__pycache__
+exclude = venv,__pycache__,examples
 max-line-length = 120

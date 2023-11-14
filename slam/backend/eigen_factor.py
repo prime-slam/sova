@@ -1,14 +1,19 @@
 from octreelib.grid import GridBase
 
-__all__ = ["EigenFactorBackend"]
-
 from slam.backend.mrob_backend import MROBBackend
+
+__all__ = ["EigenFactorBackend"]
 
 
 class EigenFactorBackend(MROBBackend):
     def _init_point_clouds(self, grid: GridBase) -> None:
         """
         Initializes plane features using eigen factor backend
+
+        Parameters
+        ----------
+        grid: GridBase
+            Represents grid with all inserted point clouds
         """
         for pose_number in range(self._poses_number):
             leaf_voxels = grid.get_leaf_points(
