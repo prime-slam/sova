@@ -39,9 +39,9 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.segmenter import RansacSegmenter
+from slam.segmenter import RansacSegmenter, CAPESegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, Reader
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Segmentation")
@@ -56,6 +56,8 @@ if __name__ == "__main__":
         reader = HiltiReader()
     elif "kitti" in args.data_directory.lower():
         reader = KittiReader()
+    elif "nuscenes" in args.data_directory.lower():
+        reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
 

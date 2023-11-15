@@ -58,7 +58,7 @@ from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, Reader
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
@@ -75,6 +75,8 @@ if __name__ == "__main__":
         reader = HiltiReader()
     elif "kitti" in args.data_directory.lower():
         reader = KittiReader()
+    elif "nuscenes" in args.data_directory.lower():
+        reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
 
