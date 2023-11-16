@@ -42,6 +42,8 @@ python3 examples/pipeline.py \
     --diff True
 ```
 """
+import mrob
+import numpy as np
 import open3d as o3d
 from octreelib.grid import VisualizationConfig, GridConfig
 
@@ -82,6 +84,8 @@ if __name__ == "__main__":
 
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
+    iterations_count = 2
+
     subdividers = [
         SizeSubdivider(
             size=4,
@@ -128,55 +132,59 @@ if __name__ == "__main__":
             point_clouds.append(point_cloud)
             initial_poses.append(initial_pose)
 
-        # TODO(user): You can also change Backend type
-        backend = EigenFactorBackend(
-            poses_number=args.step,
-            iterations_number=5000,
-        )
-
-        pipeline = SequentialPipeline(
-            point_clouds=point_clouds,
-            poses=initial_poses,
-            subdividers=subdividers,
-            segmenters=segmenters,
-            filters=filters,
-            backend=backend,
-        )
-
-        output = pipeline.run(
-            SequentialPipelineRuntimeParameters(
-                grid_configuration=grid_configuration,
-                visualization_config=VisualizationConfig(
-                    filepath=f"{args.visualizations_directory}/{start}-{end-1}.html"
-                ),
-                initial_point_cloud_number=len(point_clouds) // 2,
+        optimised_poses = [np.eye(4)] * (end - start)
+        poses = copy.deepcopy(initial_poses)
+        for iteration_ind in range(iterations_count):
+            # TODO(user): You can also change Backend type
+            backend = EigenFactorBackend(
+                poses_number=(end - start),
+                iterations_number=5000,
+                robust_type=mrob.QUADRATIC,
             )
-        )
-        print(f"Output:\n{output}")
 
-        if args.diff:
-            random.seed(42)
-            initial_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
-            optimised_point_cloud = o3d.geometry.PointCloud(
-                o3d.utility.Vector3dVector()
+            pipeline = SequentialPipeline(
+                point_clouds=point_clouds,
+                poses=poses,
+                subdividers=subdividers,
+                segmenters=segmenters,
+                filters=filters,
+                backend=backend,
             )
-            for point_cloud, initial_pose, optimised_pose in zip(
-                point_clouds, initial_poses, output.poses
-            ):
-                color = [random.random(), random.random(), random.random()]
-                before = copy.deepcopy(point_cloud).transform(initial_pose)
-                before.paint_uniform_color(color)
-                initial_point_cloud += before
 
-                after = (
-                    copy.deepcopy(point_cloud)
-                    .transform(initial_pose)
-                    .transform(optimised_pose)
+            output = pipeline.run(
+                SequentialPipelineRuntimeParameters(
+                    grid_configuration=grid_configuration,
+                    visualization_config=VisualizationConfig(
+                        filepath=f"{args.visualizations_directory}/{start}-{end-1}_{iteration_ind}.html"
+                    ),
+                    initial_point_cloud_number=(end - start) // 2,
                 )
-                after.paint_uniform_color(color)
-                optimised_point_cloud += after
+            )
+            print(f"Iteration: {iteration_ind}:\n{output}")
 
-            print("Initial point clouds is going to be printed")
-            o3d.visualization.draw(initial_point_cloud)
-            print("Optimised point clouds is going to be printed")
-            o3d.visualization.draw(optimised_point_cloud)
+            for pose_ind in range(len(initial_poses)):
+                optimised_poses[pose_ind] = optimised_poses[pose_ind] @ output.poses[pose_ind]
+                poses[pose_ind] = poses[pose_ind] @ optimised_poses[pose_ind]
+
+            if args.diff:
+                random.seed(42)
+                initial_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
+                optimised_point_cloud = o3d.geometry.PointCloud(
+                    o3d.utility.Vector3dVector()
+                )
+                for point_cloud, initial_pose, optimised_pose in zip(
+                    point_clouds, poses, optimised_poses
+                ):
+                    color = [random.random(), random.random(), random.random()]
+                    before = copy.deepcopy(point_cloud).transform(initial_pose)
+                    before.paint_uniform_color(color)
+                    initial_point_cloud += before
+
+                    after = copy.deepcopy(point_cloud).transform(initial_pose).transform(optimised_pose)
+                    after.paint_uniform_color(color)
+                    optimised_point_cloud += after
+
+                print("Initial point clouds is going to be printed")
+                o3d.visualization.draw(initial_point_cloud)
+                print("Optimised point clouds is going to be printed")
+                o3d.visualization.draw(optimised_point_cloud)
