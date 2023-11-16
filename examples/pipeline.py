@@ -159,7 +159,9 @@ if __name__ == "__main__":
 
             if args.diff:
                 random.seed(42)
-                initial_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
+                initial_point_cloud = o3d.geometry.PointCloud(
+                    o3d.utility.Vector3dVector()
+                )
                 optimised_point_cloud = o3d.geometry.PointCloud(
                     o3d.utility.Vector3dVector()
                 )
