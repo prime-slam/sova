@@ -1,3 +1,4 @@
+import numpy as np
 from octreelib.grid import Grid
 
 from dataclasses import dataclass
@@ -47,14 +48,16 @@ class SequentialPipeline(Pipeline):
 
         grid.insert_points(
             parameters.initial_point_cloud_number,
-            transformed_point_clouds[parameters.initial_point_cloud_number].points,
+            np.asarray(
+                transformed_point_clouds[parameters.initial_point_cloud_number].points
+            ),
         )
         grid.subdivide(self._subdividers)
 
         for pose_number, point_cloud in enumerate(transformed_point_clouds):
             if pose_number == parameters.initial_point_cloud_number:
                 continue
-            grid.insert_points(pose_number, point_cloud.points)
+            grid.insert_points(pose_number, np.asarray(point_cloud.points))
 
         for segmenter in self._segmenters:
             grid.map_leaf_points(segmenter)

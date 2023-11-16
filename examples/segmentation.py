@@ -39,7 +39,7 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.segmenter import RansacSegmenter, CAPESegmenter
+from slam.segmenter import CAPESegmenter, RansacSegmenter
 from slam.subdivider import SizeSubdivider
 from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
 
