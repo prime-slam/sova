@@ -42,8 +42,6 @@ python3 examples/pipeline.py \
     --diff True
 ```
 """
-import mrob
-import numpy as np
 import open3d as o3d
 from octreelib.grid import GridConfig, VisualizationConfig
 
@@ -134,7 +132,6 @@ if __name__ == "__main__":
             backend = EigenFactorBackend(
                 poses_number=(end - start),
                 iterations_number=5000,
-                robust_type=mrob.QUADRATIC,
             )
 
             pipeline = SequentialPipeline(
