@@ -45,15 +45,13 @@ python3 examples/pipeline.py \
 import mrob
 import numpy as np
 import open3d as o3d
-from octreelib.grid import VisualizationConfig, GridConfig
+from octreelib.grid import GridConfig, VisualizationConfig
 
 import argparse
 import copy
 import os
 import random
 import sys
-
-from octreelib.octree import OctreeConfig, MultiPoseOctree
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from slam.backend import EigenFactorBackend
@@ -103,9 +101,7 @@ if __name__ == "__main__":
     filters = []
 
     grid_configuration = GridConfig(
-        octree_type=MultiPoseOctree,
-        octree_config=OctreeConfig(),
-        grid_voxel_edge_length=8,
+        voxel_edge_length=8,
     )
     # End of pipeline specification section
     # Do not touch code below, just run it :)

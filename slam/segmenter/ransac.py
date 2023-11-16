@@ -70,7 +70,7 @@ class RansacSegmenter(Segmenter):
             # TODO: Remove after migration to numpy in octreelib
             inlier_cloud = point_cloud.select_by_index(inliers)
 
-            return inlier_cloud.points
+            return np.asarray(inlier_cloud.points)
         except Exception as ex:
             if self.__debug:
                 print(ex)
