@@ -128,7 +128,6 @@ if __name__ == "__main__":
             point_clouds.append(point_cloud)
             initial_poses.append(initial_pose)
 
-        optimised_poses = [np.eye(4)] * (end - start)
         poses = copy.deepcopy(initial_poses)
         for iteration_ind in range(iterations_count):
             # TODO(user): You can also change Backend type
@@ -159,8 +158,7 @@ if __name__ == "__main__":
             print(f"Iteration: {iteration_ind}:\n{output}")
 
             for pose_ind in range(len(initial_poses)):
-                optimised_poses[pose_ind] = optimised_poses[pose_ind] @ output.poses[pose_ind]
-                poses[pose_ind] = poses[pose_ind] @ optimised_poses[pose_ind]
+                poses[pose_ind] = output.poses[pose_ind] @ poses[pose_ind]
 
             if args.diff:
                 random.seed(42)
@@ -169,14 +167,14 @@ if __name__ == "__main__":
                     o3d.utility.Vector3dVector()
                 )
                 for point_cloud, initial_pose, optimised_pose in zip(
-                    point_clouds, poses, optimised_poses
+                    point_clouds, initial_poses, poses
                 ):
                     color = [random.random(), random.random(), random.random()]
                     before = copy.deepcopy(point_cloud).transform(initial_pose)
                     before.paint_uniform_color(color)
                     initial_point_cloud += before
 
-                    after = copy.deepcopy(point_cloud).transform(initial_pose).transform(optimised_pose)
+                    after = copy.deepcopy(point_cloud).transform(optimised_pose)
                     after.paint_uniform_color(color)
                     optimised_point_cloud += after
 
