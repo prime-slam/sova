@@ -1,4 +1,4 @@
-# Kitti dataset evaluation
+# NuScenes dataset evaluation
 
 **This folder contains a little piece of Kitti dataset, full version of witch can
 be found on [official website](https://www.nuscenes.org/nuscenes). This dataset
