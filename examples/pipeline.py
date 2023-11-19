@@ -42,7 +42,6 @@ python3 examples/pipeline.py \
     --diff True
 ```
 """
-import mrob
 import open3d as o3d
 from octreelib.grid import GridConfig, VisualizationConfig
 
