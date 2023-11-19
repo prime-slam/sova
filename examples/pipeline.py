@@ -56,7 +56,7 @@ from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader, OptimisedPoseReadWriter
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
@@ -77,10 +77,11 @@ if __name__ == "__main__":
         reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
+    posesWriter = OptimisedPoseReadWriter()
 
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
-    iterations_count = 2
+    iterations_count = 1
 
     subdividers = [
         SizeSubdivider(
@@ -101,6 +102,8 @@ if __name__ == "__main__":
     grid_configuration = GridConfig(
         voxel_edge_length=8,
     )
+
+    optimised_poses_dir = "./optimised"
     # End of pipeline specification section
     # Do not touch code below, just run it :)
 
@@ -168,6 +171,7 @@ if __name__ == "__main__":
                 for point_cloud, initial_pose, optimised_pose in zip(
                     point_clouds, initial_poses, poses
                 ):
+                    print(optimised_pose)
                     color = [random.random(), random.random(), random.random()]
                     before = copy.deepcopy(point_cloud).transform(initial_pose)
                     before.paint_uniform_color(color)
@@ -181,3 +185,9 @@ if __name__ == "__main__":
                 o3d.visualization.draw(initial_point_cloud)
                 print("Optimised point clouds is going to be printed")
                 o3d.visualization.draw(optimised_point_cloud)
+
+        for optimised_pose_ind, optimised_pose in enumerate(poses):
+            posesWriter.write(
+                os.path.join(optimised_poses_dir, f"{optimised_pose_ind}.txt"),
+                optimised_pose,
+            )
