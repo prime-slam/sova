@@ -42,6 +42,7 @@ python3 examples/pipeline.py \
     --diff True
 ```
 """
+import mrob
 import open3d as o3d
 from octreelib.grid import GridConfig, VisualizationConfig
 
@@ -81,7 +82,7 @@ if __name__ == "__main__":
 
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
-    iterations_count = 1
+    iterations_count = 2
 
     subdividers = [
         SizeSubdivider(
@@ -171,7 +172,6 @@ if __name__ == "__main__":
                 for point_cloud, initial_pose, optimised_pose in zip(
                     point_clouds, initial_poses, poses
                 ):
-                    print(optimised_pose)
                     color = [random.random(), random.random(), random.random()]
                     before = copy.deepcopy(point_cloud).transform(initial_pose)
                     before.paint_uniform_color(color)
@@ -186,8 +186,8 @@ if __name__ == "__main__":
                 print("Optimised point clouds is going to be printed")
                 o3d.visualization.draw(optimised_point_cloud)
 
-        for optimised_pose_ind, optimised_pose in enumerate(poses):
+        for optimised_pose_number in range(start, end):
             posesWriter.write(
-                os.path.join(optimised_poses_dir, f"{optimised_pose_ind}.txt"),
-                optimised_pose,
+                os.path.join(optimised_poses_dir, f"{optimised_pose_number}.txt"),
+                poses[optimised_pose_number - start],
             )
