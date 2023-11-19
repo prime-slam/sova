@@ -56,7 +56,7 @@ from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader, OptimisedPoseReadWriter
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
@@ -77,6 +77,7 @@ if __name__ == "__main__":
         reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
+    posesWriter = OptimisedPoseReadWriter()
 
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
@@ -101,6 +102,8 @@ if __name__ == "__main__":
     grid_configuration = GridConfig(
         voxel_edge_length=8,
     )
+
+    optimised_poses_dir = "./optimised"
     # End of pipeline specification section
     # Do not touch code below, just run it :)
 
@@ -181,3 +184,9 @@ if __name__ == "__main__":
                 o3d.visualization.draw(initial_point_cloud)
                 print("Optimised point clouds is going to be printed")
                 o3d.visualization.draw(optimised_point_cloud)
+
+        for optimised_pose_number in range(start, end):
+            posesWriter.write(
+                os.path.join(optimised_poses_dir, f"{optimised_pose_number}.txt"),
+                poses[optimised_pose_number - start],
+            )
