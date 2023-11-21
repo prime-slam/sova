@@ -66,7 +66,7 @@ class SequentialPipeline(Pipeline):
 
         backend_output = self._backend.process(grid)
 
-        parameters.visualization_config.voxels_mask = backend_output.features_mask
+        parameters.visualization_config.unused_voxels = backend_output.unused_features
         grid.visualize(parameters.visualization_config)
 
         return backend_output
