@@ -56,7 +56,13 @@ from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader, OptimisedPoseReadWriter
+from slam.utils import (
+    HiltiReader,
+    KittiReader,
+    NuscenesReader,
+    OptimisedPoseReadWriter,
+    Reader,
+)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")

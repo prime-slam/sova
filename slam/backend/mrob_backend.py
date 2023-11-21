@@ -2,7 +2,7 @@ import mrob
 from octreelib.grid import GridBase
 
 from abc import abstractmethod
-from typing import Dict
+from typing import Dict, List
 
 from slam.backend.backend import Backend, BackendOutput, Metric
 
@@ -89,4 +89,8 @@ class MROBBackend(Backend):
             Metric(name="chi2", value=self._graph.chi2()),
         )
 
-        return BackendOutput(self._graph.get_estimated_state(), metrics)
+        return BackendOutput(
+            self._graph.get_estimated_state(),
+            metrics,
+            self._graph.get_eigen_factors_robust_mask(),
+        )

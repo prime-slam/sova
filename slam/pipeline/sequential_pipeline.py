@@ -1,5 +1,5 @@
 import numpy as np
-from octreelib.grid import Grid
+from octreelib.grid import Grid, VisualizationConfig
 
 from dataclasses import dataclass
 
@@ -64,7 +64,9 @@ class SequentialPipeline(Pipeline):
 
         grid.filter(self._filters)
 
-        grid.visualize(parameters.visualization_config)
-        print(f"Visualization was saved to {parameters.visualization_config.filepath}")
+        backend_output = self._backend.process(grid)
 
-        return self._backend.process(grid)
+        parameters.visualization_config.voxels_mask = backend_output.features_mask
+        grid.visualize(parameters.visualization_config)
+
+        return backend_output

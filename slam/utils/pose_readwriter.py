@@ -1,6 +1,6 @@
 import numpy as np
 
-from slam.typing import ArrayNx4x4, Array4x4
+from slam.typing import Array4x4, ArrayNx4x4
 
 __all__ = ["OptimisedPoseReadWriter"]
 
