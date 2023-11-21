@@ -2,7 +2,7 @@ import mrob
 from octreelib.grid import GridBase
 
 from abc import abstractmethod
-from typing import Dict, List
+from typing import Dict
 
 from slam.backend.backend import Backend, BackendOutput, Metric
 

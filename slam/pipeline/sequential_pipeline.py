@@ -1,5 +1,5 @@
 import numpy as np
-from octreelib.grid import Grid, VisualizationConfig
+from octreelib.grid import Grid
 
 from dataclasses import dataclass
 
