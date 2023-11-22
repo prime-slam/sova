@@ -19,7 +19,6 @@ How can I run it?
 python3 examples/pipeline.py --configuration_path examples/configurations/hilti.yaml
 ```
 """
-import mrob
 import open3d as o3d
 from octreelib.grid import VisualizationConfig
 
