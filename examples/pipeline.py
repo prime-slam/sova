@@ -42,7 +42,6 @@ python3 examples/pipeline.py \
     --diff True
 ```
 """
-import mrob
 import open3d as o3d
 from octreelib.grid import GridConfig, VisualizationConfig
 
@@ -57,7 +56,7 @@ from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, OptimisedPoseReadWriter, Reader
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader, OptimisedPoseReadWriter
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
