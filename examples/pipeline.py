@@ -1,6 +1,6 @@
 """
 This script contains example of running pipeline.
-Options could be changed in the appropriate place of this script, and that's only thing that user may change (and also type of backend).
+Options could be changed in the appropriate place of YAML file.
 
 Flow of pipeline:
 1. Inserts initial point cloud into Grid and subdivides it
@@ -11,39 +11,16 @@ Flow of pipeline:
 6. Saves visualization to specified directory
 
 Arguments of CLI:
-data_directory: str
-    Path to dataset directory which must has structure like this:
-        dataset_name
-            /clouds
-                0.pcd
-                ...
-            /poses
-                0.txt
-                ...
-first_point_cloud_number: int
-    Number of first point cloud to optimise
-last_point_cloud_number: int
-    Number of last point cloud to optimise
-step: int
-    Step between optimising patches
-visualizations_directory: str
-    Represents name of directory where segmented point clouds would be stored
-diff: bool
-    Represents parameter for visualization before/after state
+configuration_path: str
+    Represents path to YAML configuration of Pipeline
 
 How can I run it?
 ```
-python3 examples/pipeline.py \
-    --data_directory evaluation/hilti \
-    --first_point_cloud_number 0 \
-    --last_point_cloud_number 27 \
-    --step 4 \
-    --visualizations_directory visualizations \
-    --diff True
+python3 examples/pipeline.py --configuration_path examples/configurations/hilti.yaml
 ```
 """
 import open3d as o3d
-from octreelib.grid import GridConfig, VisualizationConfig
+from octreelib.grid import VisualizationConfig
 
 import argparse
 import copy
@@ -51,67 +28,34 @@ import os
 import random
 import sys
 
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
-from slam.segmenter import RansacSegmenter
-from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader, OptimisedPoseReadWriter
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, OptimisedPoseReadWriter, Configuration, Reader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
-    parser.add_argument("--data_directory", type=str, required=True)
-    parser.add_argument("--first_point_cloud_number", type=int, required=True)
-    parser.add_argument("--last_point_cloud_number", type=int, required=True)
-    parser.add_argument("--step", type=int, required=True)
-    parser.add_argument("--visualizations_directory", type=str, required=True)
-    parser.add_argument("--diff", type=bool)
+    parser.add_argument("--configuration_path", type=str, required=True)
     args = parser.parse_args()
 
-    reader = Reader
-    if "hilti" in args.data_directory.lower():
-        reader = HiltiReader()
-    elif "kitti" in args.data_directory.lower():
-        reader = KittiReader()
-    elif "nuscenes" in args.data_directory.lower():
-        reader = NuscenesReader()
+    configuration = Configuration(args.configuration_path)
+
+    dataset_reader = Reader
+    if "hilti" in configuration.dataset_path.lower():
+        dataset_reader = HiltiReader()
+    elif "kitti.yaml" in configuration.dataset_path.lower():
+        dataset_reader = KittiReader()
+    elif "nuscenes" in configuration.dataset_path.lower():
+        dataset_reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
     posesWriter = OptimisedPoseReadWriter()
 
-    # Pipeline configuration
-    # TODO(user): You can manipulate configuration specification below as you want
-    iterations_count = 2
-
-    subdividers = [
-        SizeSubdivider(
-            size=4,
-        ),
-    ]
-
-    segmenters = [
-        RansacSegmenter(
-            threshold=0.01,
-            initial_points=6,
-            iterations=5000,
-        ),
-    ]
-
-    filters = []
-
-    grid_configuration = GridConfig(
-        voxel_edge_length=8,
-    )
-
-    optimised_poses_dir = "./optimised"
-    # End of pipeline specification section
-    # Do not touch code below, just run it :)
-
     for ind in range(
-        args.first_point_cloud_number, args.last_point_cloud_number, args.step
+        configuration.patches_start, configuration.patches_end, configuration.patches_step
     ):
         start = ind
-        end = min(args.last_point_cloud_number, ind + args.step)
+        end = min(configuration.patches_end, ind + configuration.patches_step)
 
         print(f"Processing {start} to {end-1}...")
 
@@ -119,38 +63,32 @@ if __name__ == "__main__":
         initial_poses = []
         for s in range(start, end):
             point_cloud_path = os.path.join(
-                args.data_directory, "clouds", str(s) + ".pcd"
+                configuration.dataset_path, "clouds", str(s) + ".pcd"
             )
-            pose_path = os.path.join(args.data_directory, "poses", str(s) + ".txt")
+            pose_path = os.path.join(configuration.dataset_path, "poses", str(s) + ".txt")
 
-            point_cloud = reader.read_point_cloud(filename=point_cloud_path)
-            initial_pose = reader.read_pose(filename=pose_path)
+            point_cloud = dataset_reader.read_point_cloud(filename=point_cloud_path)
+            initial_pose = dataset_reader.read_pose(filename=pose_path)
 
             point_clouds.append(point_cloud)
             initial_poses.append(initial_pose)
 
         poses = copy.deepcopy(initial_poses)
-        for iteration_ind in range(iterations_count):
-            # TODO(user): You can also change Backend type
-            backend = EigenFactorBackend(
-                poses_number=(end - start),
-                iterations_number=5000,
-            )
-
+        for iteration_ind in range(configuration.patches_iterations):
             pipeline = SequentialPipeline(
                 point_clouds=point_clouds,
                 poses=poses,
-                subdividers=subdividers,
-                segmenters=segmenters,
-                filters=filters,
-                backend=backend,
+                subdividers=configuration.subdividers,
+                segmenters=configuration.segmenters,
+                filters=configuration.filters,
+                backend=configuration.backend(start, end),
             )
 
             output = pipeline.run(
                 SequentialPipelineRuntimeParameters(
-                    grid_configuration=grid_configuration,
+                    grid_configuration=configuration.grid_configuration,
                     visualization_config=VisualizationConfig(
-                        filepath=f"{args.visualizations_directory}/{start}-{end-1}_{iteration_ind}.html"
+                        filepath=f"{configuration.visualization_dir}/{start}-{end-1}_{iteration_ind}.html"
                     ),
                     initial_point_cloud_number=(end - start) // 2,
                 )
@@ -160,7 +98,7 @@ if __name__ == "__main__":
             for pose_ind in range(len(initial_poses)):
                 poses[pose_ind] = output.poses[pose_ind] @ poses[pose_ind]
 
-            if args.diff:
+            if configuration.debug:
                 random.seed(42)
                 initial_point_cloud = o3d.geometry.PointCloud(
                     o3d.utility.Vector3dVector()
@@ -187,6 +125,6 @@ if __name__ == "__main__":
 
         for optimised_pose_number in range(start, end):
             posesWriter.write(
-                os.path.join(optimised_poses_dir, f"{optimised_pose_number}.txt"),
+                os.path.join(configuration.optimisation_dir, f"{optimised_pose_number}.txt"),
                 poses[optimised_pose_number - start],
             )
