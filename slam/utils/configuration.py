@@ -9,8 +9,19 @@ from octreelib.grid import GridConfig
 
 from slam.backend import Backend, EigenFactorBackend, BaregBackend
 from slam.filter import Filter
-from slam.segmenter import Segmenter, CAPESegmenter, CountSegmenter, IdenticalSegmenter, RansacSegmenter
-from slam.subdivider import Subdivider, SizeSubdivider, CountSubdivider, EigenValueSubdivider
+from slam.segmenter import (
+    Segmenter,
+    CAPESegmenter,
+    CountSegmenter,
+    IdenticalSegmenter,
+    RansacSegmenter,
+)
+from slam.subdivider import (
+    Subdivider,
+    SizeSubdivider,
+    CountSubdivider,
+    EigenValueSubdivider,
+)
 
 __all__ = ["Configuration"]
 
@@ -24,6 +35,7 @@ class Configuration:
     filepath: str
         Path to yaml configuration of pipeline
     """
+
     def __init__(self, filepath: str) -> None:
         with open(filepath) as file:
             self._configuration = yaml.safe_load(file)
@@ -186,7 +198,9 @@ class Configuration:
             Subdividers list
         """
         try:
-            subdividers_configuration = copy.deepcopy(self._configuration["subdividers"])
+            subdividers_configuration = copy.deepcopy(
+                self._configuration["subdividers"]
+            )
         except KeyError:
             raise ValueError("subdividers must be not empty")
 
@@ -243,9 +257,7 @@ class Configuration:
         for name in segmenters_configuration.keys():
             name = name.lower()
             values = segmenters_configuration[name]
-            segmenters.append(
-                segmenters_names[name](**values)
-            )
+            segmenters.append(segmenters_names[name](**values))
 
         return segmenters
 
@@ -264,9 +276,7 @@ class Configuration:
         except KeyError:
             raise ValueError("grid_configuration must be not empty")
 
-        return GridConfig(
-            voxel_edge_length=grid_configuration["voxel_edge_length"]
-        )
+        return GridConfig(voxel_edge_length=grid_configuration["voxel_edge_length"])
 
     def backend(self, start: int, end: int) -> Backend:
         """
@@ -293,17 +303,16 @@ class Configuration:
             "eigen_factor": EigenFactorBackend,
             "bareg": BaregBackend,
         }
-        robust_types = {
-            "huber": mrob.HUBER,
-            "quadratic": mrob.QUADRATIC
-        }
+        robust_types = {"huber": mrob.HUBER, "quadratic": mrob.QUADRATIC}
 
         try:
             backend_type = backend_configuration["type"]
             backend_parameters = backend_configuration["parameters"]
-            backend_parameters["poses_number"] = end-start
+            backend_parameters["poses_number"] = end - start
             try:
-                backend_parameters["robust_type"] = robust_types[backend_parameters["robust_type"].lower()]
+                backend_parameters["robust_type"] = robust_types[
+                    backend_parameters["robust_type"].lower()
+                ]
             except KeyError as e:
                 if self.debug:
                     print(e)

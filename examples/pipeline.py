@@ -31,7 +31,14 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, OptimisedPoseReadWriter, Configuration, Reader
+from slam.utils import (
+    HiltiReader,
+    KittiReader,
+    NuscenesReader,
+    OptimisedPoseReadWriter,
+    Configuration,
+    Reader,
+)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
@@ -52,7 +59,9 @@ if __name__ == "__main__":
     posesWriter = OptimisedPoseReadWriter()
 
     for ind in range(
-        configuration.patches_start, configuration.patches_end, configuration.patches_step
+        configuration.patches_start,
+        configuration.patches_end,
+        configuration.patches_step,
     ):
         start = ind
         end = min(configuration.patches_end, ind + configuration.patches_step)
@@ -65,7 +74,9 @@ if __name__ == "__main__":
             point_cloud_path = os.path.join(
                 configuration.dataset_path, "clouds", str(s) + ".pcd"
             )
-            pose_path = os.path.join(configuration.dataset_path, "poses", str(s) + ".txt")
+            pose_path = os.path.join(
+                configuration.dataset_path, "poses", str(s) + ".txt"
+            )
 
             point_cloud = dataset_reader.read_point_cloud(filename=point_cloud_path)
             initial_pose = dataset_reader.read_pose(filename=pose_path)
@@ -125,6 +136,8 @@ if __name__ == "__main__":
 
         for optimised_pose_number in range(start, end):
             posesWriter.write(
-                os.path.join(configuration.optimisation_dir, f"{optimised_pose_number}.txt"),
+                os.path.join(
+                    configuration.optimisation_dir, f"{optimised_pose_number}.txt"
+                ),
                 poses[optimised_pose_number - start],
             )
