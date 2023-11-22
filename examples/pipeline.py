@@ -55,15 +55,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from slam.backend import EigenFactorBackend
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
-from slam.segmenter import RansacSegmenter, CAPESegmenter
+from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
-from slam.utils import (
-    HiltiReader,
-    KittiReader,
-    NuscenesReader,
-    OptimisedPoseReadWriter,
-    Reader,
-)
+from slam.utils import HiltiReader, KittiReader, NuscenesReader, OptimisedPoseReadWriter, Reader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
@@ -88,11 +82,11 @@ if __name__ == "__main__":
 
     # Pipeline configuration
     # TODO(user): You can manipulate configuration specification below as you want
-    iterations_count = 1
+    iterations_count = 2
 
     subdividers = [
         SizeSubdivider(
-            size=2,
+            size=4,
         ),
     ]
 
