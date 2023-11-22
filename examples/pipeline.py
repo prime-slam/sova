@@ -61,37 +61,6 @@ if __name__ == "__main__":
         raise ValueError("Unrecognisable type of dataset")
     posesWriter = OptimisedPoseReadWriter()
 
-<<<<<<< HEAD
-=======
-    # Pipeline configuration
-    # TODO(user): You can manipulate configuration specification below as you want
-    iterations_count = 1
-
-    subdividers = [
-        SizeSubdivider(
-            size=2,
-        ),
-    ]
-
-    segmenters = [
-        RansacSegmenter(
-            threshold=0.01,
-            initial_points=6,
-            iterations=5000,
-        ),
-    ]
-
-    filters = []
-
-    grid_configuration = GridConfig(
-        voxel_edge_length=8,
-    )
-
-    optimised_poses_dir = "./optimised"
-    # End of pipeline specification section
-    # Do not touch code below, just run it :)
-
->>>>>>> 2f41766 (wip)
     for ind in range(
         configuration_reader.patches_start,
         configuration_reader.patches_end,
