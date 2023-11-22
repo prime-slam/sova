@@ -28,15 +28,14 @@ import os
 import random
 import sys
 
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
 from slam.utils import (
+    Configuration,
     HiltiReader,
     KittiReader,
     NuscenesReader,
     OptimisedPoseReadWriter,
-    Configuration,
     Reader,
 )
 

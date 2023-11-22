@@ -1,26 +1,24 @@
-import copy
-
 import mrob
 import yaml
-
-from typing import List
-
 from octreelib.grid import GridConfig
 
-from slam.backend import Backend, EigenFactorBackend, BaregBackend
+import copy
+from typing import List
+
+from slam.backend import Backend, BaregBackend, EigenFactorBackend
 from slam.filter import Filter
 from slam.segmenter import (
-    Segmenter,
     CAPESegmenter,
     CountSegmenter,
     IdenticalSegmenter,
     RansacSegmenter,
+    Segmenter,
 )
 from slam.subdivider import (
-    Subdivider,
-    SizeSubdivider,
     CountSubdivider,
     EigenValueSubdivider,
+    SizeSubdivider,
+    Subdivider,
 )
 
 __all__ = ["Configuration"]

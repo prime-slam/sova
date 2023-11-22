@@ -53,7 +53,7 @@ if __name__ == "__main__":
     reader = Reader
     if "hilti" in args.data_directory.lower():
         reader = HiltiReader()
-    elif "kitti.yaml" in args.data_directory.lower():
+    elif "kitti" in args.data_directory.lower():
         reader = KittiReader()
     elif "nuscenes" in args.data_directory.lower():
         reader = NuscenesReader()
