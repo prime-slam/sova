@@ -108,7 +108,7 @@ class MROBBackend(Backend):
         unused_features = []
 
         for voxel_id, plane_id in self._planes.items():
-            if not robust_mask[plane_id]:
+            if robust_mask[plane_id]:
                 unused_features.append(voxel_id)
 
         return unused_features
