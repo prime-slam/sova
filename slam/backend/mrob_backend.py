@@ -111,8 +111,4 @@ class MROBBackend(Backend):
             if not robust_mask[plane_id]:
                 unused_features.append(voxel_id)
 
-        print(f"Total features = {len(self._planes.keys())}")
-        print(f"Robust mask = {self._graph.get_eigen_factors_robust_mask()}")
-        print(f"Unused features = {len(unused_features)}")
-
         return unused_features
