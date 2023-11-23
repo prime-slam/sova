@@ -31,7 +31,6 @@ python3 examples/segmentation.py \
 import numpy as np
 import open3d as o3d
 from octreelib.grid import Grid, GridConfig, VisualizationConfig
-from octreelib.octree import MultiPoseOctree, OctreeConfig
 
 import argparse
 import os
@@ -39,7 +38,7 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.segmenter import CAPESegmenter, RansacSegmenter
+from slam.segmenter import RansacSegmenter
 from slam.subdivider import SizeSubdivider
 from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
 
@@ -90,9 +89,7 @@ if __name__ == "__main__":
 
     grid = Grid(
         GridConfig(
-            octree_type=MultiPoseOctree,
-            octree_config=OctreeConfig(),
-            grid_voxel_edge_length=8,
+            voxel_edge_length=8,
         )
     )
     # End of specification section
