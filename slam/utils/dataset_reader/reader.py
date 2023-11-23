@@ -4,10 +4,10 @@ from abc import ABC, abstractmethod
 
 from slam.typing import ArrayNx4x4
 
-__all__ = ["Reader"]
+__all__ = ["DatasetReader"]
 
 
-class Reader(ABC):
+class DatasetReader(ABC):
     """
     Represents abstract class for reading poses and point clouds of various datasets
     """

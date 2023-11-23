@@ -2,14 +2,14 @@ import numpy as np
 import open3d as o3d
 
 from slam.typing import ArrayNx4x4
-from slam.utils.reader.reader import Reader
+from slam.utils.dataset_reader.reader import DatasetReader
 
 __all__ = ["HiltiReader"]
 
 
-class HiltiReader(Reader):
+class HiltiReader(DatasetReader):
     """
-    Represents Hilti dataset reader
+    Represents Hilti dataset dataset_reader
     Source: https://hilti-challenge.com/dataset-2023.html
     """
 

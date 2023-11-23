@@ -1,18 +1,18 @@
 import numpy as np
 import open3d as o3d
 
-import os.path
-
 from slam.typing import ArrayNx4x4
-from slam.utils.reader.reader import Reader
+from slam.utils.dataset_reader.reader import DatasetReader
 
-__all__ = ["KittiReader"]
+__all__ = ["NuscenesReader"]
 
 
-class KittiReader(Reader):
+class NuscenesReader(DatasetReader):
     """
-    Represents KITTI dataset reader
-    Source: https://www.cvlibs.net/datasets/kitti/eval_odometry.php
+    Represents Nuscenes dataset dataset_reader
+    This dataset was converted to KITTI format using script:
+    https://github.com/PRBonn/lidar_transfer/blob/main/auxiliary/convert/nuscenes2kitti.py
+    Source: https://www.nuscenes.org/nuscenes
     """
 
     @staticmethod
@@ -20,14 +20,6 @@ class KittiReader(Reader):
         """
         Reads KITTI pose file
         """
-        calibration_matrix = np.eye(4)
-        calibration_file_path = os.path.join(os.path.dirname(filename), "calib.txt")
-        with open(calibration_file_path) as file:
-            line = file.readlines()[4][4:]
-        calibration_matrix[:3, :4] = np.array(
-            list(map(float, line.rstrip().split(" ")))
-        ).reshape(3, 4)
-
         pose_matrix = np.eye(4)
         with open(filename) as file:
             lines = file.readlines()
@@ -35,7 +27,7 @@ class KittiReader(Reader):
                 list(map(float, lines[0].rstrip().split(" ")))
             ).reshape(3, 4)
 
-        return pose_matrix @ calibration_matrix
+        return pose_matrix
 
     @staticmethod
     def read_point_cloud(filename: str) -> o3d.geometry.PointCloud:
