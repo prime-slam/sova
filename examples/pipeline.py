@@ -29,14 +29,13 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
+from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters, YAMLConfigurationReader
 from slam.utils import (
-    Configuration,
+    DatasetReader,
     HiltiReader,
     KittiReader,
     NuscenesReader,
     OptimisedPoseReadWriter,
-    Reader,
 )
 
 if __name__ == "__main__":
@@ -44,26 +43,28 @@ if __name__ == "__main__":
     parser.add_argument("--configuration_path", type=str, required=True)
     args = parser.parse_args()
 
-    configuration = Configuration(args.configuration_path)
+    configuration_reader = YAMLConfigurationReader(args.configuration_path)
 
-    dataset_reader = Reader
-    if "hilti" in configuration.dataset_path.lower():
+    dataset_reader = DatasetReader
+    if "hilti" in configuration_reader.dataset_path.lower():
         dataset_reader = HiltiReader()
-    elif "kitti.yaml" in configuration.dataset_path.lower():
+    elif "kitti.yaml" in configuration_reader.dataset_path.lower():
         dataset_reader = KittiReader()
-    elif "nuscenes" in configuration.dataset_path.lower():
+    elif "nuscenes" in configuration_reader.dataset_path.lower():
         dataset_reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
     posesWriter = OptimisedPoseReadWriter()
 
     for ind in range(
-        configuration.patches_start,
-        configuration.patches_end,
-        configuration.patches_step,
+        configuration_reader.patches_start,
+        configuration_reader.patches_end,
+        configuration_reader.patches_step,
     ):
         start = ind
-        end = min(configuration.patches_end, ind + configuration.patches_step)
+        end = min(
+            configuration_reader.patches_end, ind + configuration_reader.patches_step
+        )
 
         print(f"Processing {start} to {end-1}...")
 
@@ -71,10 +72,10 @@ if __name__ == "__main__":
         initial_poses = []
         for s in range(start, end):
             point_cloud_path = os.path.join(
-                configuration.dataset_path, "clouds", str(s) + ".pcd"
+                configuration_reader.dataset_path, "clouds", str(s) + ".pcd"
             )
             pose_path = os.path.join(
-                configuration.dataset_path, "poses", str(s) + ".txt"
+                configuration_reader.dataset_path, "poses", str(s) + ".txt"
             )
 
             point_cloud = dataset_reader.read_point_cloud(filename=point_cloud_path)
@@ -84,21 +85,21 @@ if __name__ == "__main__":
             initial_poses.append(initial_pose)
 
         poses = copy.deepcopy(initial_poses)
-        for iteration_ind in range(configuration.patches_iterations):
+        for iteration_ind in range(configuration_reader.patches_iterations):
             pipeline = SequentialPipeline(
                 point_clouds=point_clouds,
                 poses=poses,
-                subdividers=configuration.subdividers,
-                segmenters=configuration.segmenters,
-                filters=configuration.filters,
-                backend=configuration.backend(start, end),
+                subdividers=configuration_reader.subdividers,
+                segmenters=configuration_reader.segmenters,
+                filters=configuration_reader.filters,
+                backend=configuration_reader.backend(start, end),
             )
 
             output = pipeline.run(
                 SequentialPipelineRuntimeParameters(
-                    grid_configuration=configuration.grid_configuration,
+                    grid_configuration=configuration_reader.grid_configuration,
                     visualization_config=VisualizationConfig(
-                        filepath=f"{configuration.visualization_dir}/{start}-{end-1}_{iteration_ind}.html"
+                        filepath=f"{configuration_reader.visualization_dir}/{start}-{end - 1}_{iteration_ind}.html"
                     ),
                     initial_point_cloud_number=(end - start) // 2,
                 )
@@ -108,7 +109,7 @@ if __name__ == "__main__":
             for pose_ind in range(len(initial_poses)):
                 poses[pose_ind] = output.poses[pose_ind] @ poses[pose_ind]
 
-            if configuration.debug:
+            if configuration_reader.debug:
                 random.seed(42)
                 initial_point_cloud = o3d.geometry.PointCloud(
                     o3d.utility.Vector3dVector()
@@ -136,7 +137,8 @@ if __name__ == "__main__":
         for optimised_pose_number in range(start, end):
             posesWriter.write(
                 os.path.join(
-                    configuration.optimisation_dir, f"{optimised_pose_number}.txt"
+                    configuration_reader.optimisation_dir,
+                    f"{optimised_pose_number}.txt",
                 ),
                 poses[optimised_pose_number - start],
             )

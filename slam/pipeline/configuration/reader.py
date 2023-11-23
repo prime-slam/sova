@@ -1,9 +1,9 @@
 import mrob
-import yaml
 from octreelib.grid import GridConfig
 
 import copy
-from typing import List
+from abc import ABC, abstractmethod
+from typing import Dict, List, Optional
 
 from slam.backend import Backend, BaregBackend, EigenFactorBackend
 from slam.filter import Filter
@@ -21,22 +21,29 @@ from slam.subdivider import (
     Subdivider,
 )
 
-__all__ = ["Configuration"]
+__all__ = ["ConfigurationReader"]
 
 
-class Configuration:
+class ConfigurationReader(ABC):
     """
-    Represents configuration which is read from yaml file
+    Represents abstract class for pipeline configuration reader
 
     Parameters
     ----------
     filepath: str
-        Path to yaml configuration of pipeline
+        Path to file configuration of pipeline
+
+    Attributes
+    ----------
+    configuration: Dict[str, Optional]
+        Represents configuration dictionary
     """
 
+    _configuration: Dict[str, Optional[str]] = {}
+
+    @abstractmethod
     def __init__(self, filepath: str) -> None:
-        with open(filepath) as file:
-            self._configuration = yaml.safe_load(file)
+        pass
 
     @property
     def debug(self) -> bool:
