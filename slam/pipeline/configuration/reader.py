@@ -3,7 +3,7 @@ from octreelib.grid import GridConfig
 
 import copy
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional
+from typing import List
 
 from slam.backend import Backend, BaregBackend, EigenFactorBackend
 from slam.filter import Filter
@@ -309,8 +309,10 @@ class ConfigurationReader(ABC):
             "bareg": BaregBackend,
         }
         robust_types = {
-            "huber": mrob.HUBER, "quadratic": mrob.QUADRATIC,
-            "cauchy": mrob.CAUCHY, "mcclure": mrob.MCCLURE,
+            "huber": mrob.HUBER,
+            "quadratic": mrob.QUADRATIC,
+            "cauchy": mrob.CAUCHY,
+            "mcclure": mrob.MCCLURE,
             "ransac": mrob.RANSAC,
         }
 
