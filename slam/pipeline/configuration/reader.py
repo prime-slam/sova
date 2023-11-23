@@ -35,11 +35,11 @@ class ConfigurationReader(ABC):
 
     Attributes
     ----------
-    configuration: Dict[str, Optional]
+    configuration: Dict[str, Optional[parameters]]
         Represents configuration dictionary
     """
 
-    _configuration: Dict[str, Optional[str]] = {}
+    _configuration = {}
 
     @abstractmethod
     def __init__(self, filepath: str) -> None:
@@ -308,7 +308,11 @@ class ConfigurationReader(ABC):
             "eigen_factor": EigenFactorBackend,
             "bareg": BaregBackend,
         }
-        robust_types = {"huber": mrob.HUBER, "quadratic": mrob.QUADRATIC}
+        robust_types = {
+            "huber": mrob.HUBER, "quadratic": mrob.QUADRATIC,
+            "cauchy": mrob.CAUCHY, "mcclure": mrob.MCCLURE,
+            "ransac": mrob.RANSAC,
+        }
 
         try:
             backend_type = backend_configuration["type"]

@@ -48,7 +48,7 @@ if __name__ == "__main__":
     dataset_reader = DatasetReader
     if "hilti" in configuration_reader.dataset_path.lower():
         dataset_reader = HiltiReader()
-    elif "kitti.yaml" in configuration_reader.dataset_path.lower():
+    elif "kitti" in configuration_reader.dataset_path.lower():
         dataset_reader = KittiReader()
     elif "nuscenes" in configuration_reader.dataset_path.lower():
         dataset_reader = NuscenesReader()
