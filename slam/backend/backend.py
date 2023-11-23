@@ -53,11 +53,19 @@ class BackendOutput:
         Optimised poses produced by one of backends
     metrics: List[Metric]
         Metrics which allows to evaluate the resulting optimizations
+    unused_features: List[int]
+        Represents features which were unused on optimization stage
     """
 
-    def __init__(self, poses: ArrayNx4x4[float], metrics: List[Metric]) -> None:
+    def __init__(
+        self,
+        poses: ArrayNx4x4[float],
+        metrics: List[Metric],
+        unused_features: List[int] = [],
+    ) -> None:
         self._poses: ArrayNx4x4[float] = poses
         self._metrics: List[Metric] = metrics
+        self._unused_features: List[int] = unused_features
 
     @property
     def poses(self) -> ArrayNx4x4[float]:
@@ -70,6 +78,18 @@ class BackendOutput:
             Optimised poses
         """
         return self._poses
+
+    @property
+    def unused_features(self) -> List[int]:
+        """
+        Represents method for getting features IDs which were unused on optimisation stage
+
+        Returns
+        -------
+        unused_features: List[bool]
+            Unused features
+        """
+        return self._unused_features
 
     def __str__(self) -> str:
         """

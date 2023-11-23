@@ -2,7 +2,7 @@ import mrob
 from octreelib.grid import GridBase
 
 from abc import abstractmethod
-from typing import Dict
+from typing import Dict, List
 
 from slam.backend.backend import Backend, BackendOutput, Metric
 
@@ -89,4 +89,26 @@ class MROBBackend(Backend):
             Metric(name="chi2", value=self._graph.chi2()),
         )
 
-        return BackendOutput(self._graph.get_estimated_state(), metrics)
+        return BackendOutput(
+            self._graph.get_estimated_state(),
+            metrics,
+            self.__get_unused_features(),
+        )
+
+    def __get_unused_features(self) -> List[int]:
+        """
+        Returns list of features which were unused on optimisation stage
+
+        Returns
+        -------
+        unused_features: List[int]
+            IDs list of unused features
+        """
+        robust_mask = self._graph.get_eigen_factors_robust_mask()
+        unused_features = []
+
+        for voxel_id, plane_id in self._planes.items():
+            if robust_mask[plane_id]:
+                unused_features.append(voxel_id)
+
+        return unused_features
