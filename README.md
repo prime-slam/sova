@@ -3,7 +3,7 @@ Voxel-slam repository is an open-source Python library designed for fast
 and adaptive comparison of different approaches to solving the voxel-based planar SLAM problem.
 
 Our main goal is to provide extendable, simple and efficient interfaces for
-testing various hypotheses, which includes different subdivision/segmenter/backend criteria.
+testing various hypotheses, which include different subdivision/segmenter/backend criteria.
 
 [![Linters](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml/badge.svg)](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
