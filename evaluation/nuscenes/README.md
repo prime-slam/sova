@@ -1,6 +1,6 @@
 # NuScenes dataset evaluation
 
-**This folder contains a little piece of Kitti dataset, full version of witch can
+**This folder contains a little piece of NuScenes dataset, full version of witch can
 be found on [official website](https://www.nuscenes.org/nuscenes). This dataset
 is not used for commercial purposes.**
 
