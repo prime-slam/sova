@@ -104,7 +104,11 @@ class MROBBackend(Backend):
         unused_features: List[int]
             IDs list of unused features
         """
-        robust_mask = self._graph.get_eigen_factors_robust_mask()
+        try:
+            robust_mask = self._graph.get_eigen_factors_robust_mask()
+        except AttributeError as e:
+            return []
+
         unused_features = []
 
         for voxel_id, plane_id in self._planes.items():
