@@ -106,7 +106,7 @@ class MROBBackend(Backend):
         """
         try:
             robust_mask = self._graph.get_eigen_factors_robust_mask()
-        except AttributeError as e:
+        except AttributeError:
             return []
 
         unused_features = []
