@@ -49,8 +49,11 @@ class OptimisedPoseReadWriter:
         pose: Array4x4[float]
             Matrix with pose values to write
         """
+        assert pose.shape == (4, 4)
+
         with open(filepath, "w+") as file:
-            for pose_line in pose:
-                for value in pose_line:
-                    file.write(f"{value} ")
-                file.write("\n")
+            for ind, pose_line in enumerate(pose):
+                file.write(" ".join(str(x) for x in pose_line))
+
+                if ind != pose.shape[0]:
+                    file.write("\n")

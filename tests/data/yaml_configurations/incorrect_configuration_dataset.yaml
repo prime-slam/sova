@@ -1,0 +1,17 @@
+grid:
+  voxel_edge_length: 8
+subdividers:
+  size: 2
+segmenters:
+  ransac:
+    threshold: 0.01
+    initial_points: 6
+    iterations: 5000
+backend:
+  type: "eigen_factor"
+  parameters:
+    iterations_number: 5000
+    robust_type: HUBER
+output:
+  visualization_path: "output"
+  optimisation_path: "output"

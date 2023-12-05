@@ -1,0 +1,22 @@
+dataset:
+  path: "path/to/dataset"
+  patches:
+    start: 0
+    end: 100
+    step: 10
+    iterations: 1
+grid:
+  voxel_edge_length: 8
+segmenters:
+  ransac:
+    threshold: 0.01
+    initial_points: 6
+    iterations: 5000
+backend:
+  type: "eigen_factor"
+  parameters:
+    iterations_number: 5000
+    robust_type: HUBER
+output:
+  visualization_path: "output"
+  optimisation_path: "output"
