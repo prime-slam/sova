@@ -27,6 +27,12 @@ How to do this:
     ```bash
     pip install -r requirements.txt
     ```
+    If you want to use `MROBBackend` type, you have to install mrob library manually:
+    1. Download [wheels](https://github.com/prime-slam/mrob/actions/runs/6841598615) from source
+    2. Install mrob from wheels
+    ```bash
+    pip3 install mrob --find-links=... --force-reinstall
+    ```
 
 Now you have everything you need to run your voxel-based pipeline.
 
