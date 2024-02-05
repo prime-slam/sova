@@ -16,9 +16,7 @@ class EigenFactorBackend(MROBBackend):
             Represents grid with all inserted point clouds
         """
         for pose_number in range(self._poses_number):
-            leaf_voxels = grid.get_leaf_points(
-                pose_number=pose_number,
-            )
+            leaf_voxels = grid.get_leaf_points(pose_number=pose_number)
             for voxel in leaf_voxels:
                 if voxel.id not in self._planes.keys():
                     factor_plane_id = self._graph.add_eigen_factor_plane_center()

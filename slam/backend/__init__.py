@@ -7,4 +7,9 @@ from slam.backend.bareg import *
 from slam.backend.eigen_factor import *
 from slam.backend.mrob_backend import *
 
-__all__ = backend_module.__all__ + bareg_module.__all__ + eigen_factor_module.__all__ + mrob_backend_module.__all__
+__all__ = (
+    backend_module.__all__
+    + bareg_module.__all__
+    + eigen_factor_module.__all__
+    + mrob_backend_module.__all__
+)

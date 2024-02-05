@@ -3,7 +3,7 @@ from octreelib.grid import GridConfig
 
 import copy
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from slam.backend import Backend, BaregBackend, EigenFactorBackend
 from slam.filter import Filter
@@ -157,6 +157,26 @@ class ConfigurationReader(ABC):
         return int(value)
 
     @property
+    def undistortion_segments(self) -> Optional[int]:
+        """
+        Represents patches iterations parameter of pipeline
+
+        Returns
+        -------
+        patches_iterations: int
+            Patches iterations
+        """
+        try:
+            undistortion_configuration = copy.deepcopy(
+                self._configuration["undistortion"]
+            )
+            value = undistortion_configuration["segments"]
+        except KeyError:
+            return None
+
+        return int(value)
+
+    @property
     def visualization_dir(self) -> str:
         """
         Represents visualization directory parameter of pipeline
@@ -218,9 +238,7 @@ class ConfigurationReader(ABC):
 
         for name in subdividers_configuration.keys():
             name = name.lower()
-            subdividers.append(
-                subdividers_names[name](subdividers_configuration[name]),
-            )
+            subdividers.append(subdividers_names[name](subdividers_configuration[name]))
 
         return subdividers
 
@@ -304,10 +322,7 @@ class ConfigurationReader(ABC):
         except KeyError:
             raise ValueError("backend_configuration must be not empty")
 
-        backend_names = {
-            "eigen_factor": EigenFactorBackend,
-            "bareg": BaregBackend,
-        }
+        backend_names = {"eigen_factor": EigenFactorBackend, "bareg": BaregBackend}
         robust_types = {
             "huber": mrob.HUBER,
             "quadratic": mrob.QUADRATIC,

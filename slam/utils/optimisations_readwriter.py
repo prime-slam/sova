@@ -1,13 +1,16 @@
 import numpy as np
+import open3d as o3d
 
 from slam.typing import Array4x4, ArrayNx4x4
 
-__all__ = ["OptimisedPoseReadWriter"]
+__all__ = ["OptimisationsReadWriter"]
 
 
-class OptimisedPoseReadWriter:
+class OptimisationsReadWriter:
     """
-    Represents utility class for reading/writing optimised poses. File format is:
+    Represents utility class for reading/writing optimised poses and point clouds.
+
+    Poses format is:
     r11 r12 r13 tx
     r21 r22 r23 ty
     r31 r32 r33 tz
@@ -15,7 +18,7 @@ class OptimisedPoseReadWriter:
     """
 
     @staticmethod
-    def read(filepath: str) -> ArrayNx4x4[float]:
+    def read_pose(filepath: str) -> ArrayNx4x4[float]:
         """
         Read pose from file
 
@@ -38,7 +41,11 @@ class OptimisedPoseReadWriter:
         return pose
 
     @staticmethod
-    def write(filepath: str, pose: Array4x4[float]) -> None:
+    def read_point_cloud(filepath: str) -> o3d.geometry.PointCloud:
+        return o3d.io.read_point_cloud(filepath)
+
+    @staticmethod
+    def write_pose(filepath: str, pose: Array4x4[float]) -> None:
         """
         Writes pose values to file
 
@@ -57,3 +64,7 @@ class OptimisedPoseReadWriter:
 
                 if ind != pose.shape[0]:
                     file.write("\n")
+
+    @staticmethod
+    def write_point_cloud(filepath: str, point_cloud: o3d.geometry.PointCloud):
+        o3d.io.write_point_cloud(filepath, point_cloud)

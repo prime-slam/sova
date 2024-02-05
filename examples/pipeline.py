@@ -19,6 +19,7 @@ How can I run it?
 python3 examples/pipeline.py --configuration_path examples/configurations/hilti.yaml
 ```
 """
+import numpy as np
 import open3d as o3d
 from octreelib.grid import VisualizationConfig
 
@@ -39,7 +40,7 @@ from slam.utils import (
     HiltiReader,
     KittiReader,
     NuscenesReader,
-    OptimisedPoseReadWriter,
+    OptimisationsReadWriter, Undistortioner,
 )
 
 if __name__ == "__main__":
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         dataset_reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
-    posesWriter = OptimisedPoseReadWriter()
+    optimisationsWriter = OptimisationsReadWriter()
 
     for ind in range(
         configuration_reader.patches_start,
@@ -72,7 +73,7 @@ if __name__ == "__main__":
 
         print(f"Processing {start} to {end-1}...")
 
-        point_clouds = []
+        initial_point_clouds = []
         initial_poses = []
         for s in range(start, end):
             point_cloud_path = os.path.join(
@@ -85,11 +86,30 @@ if __name__ == "__main__":
             point_cloud = dataset_reader.read_point_cloud(filename=point_cloud_path)
             initial_pose = dataset_reader.read_pose(filename=pose_path)
 
-            point_clouds.append(point_cloud)
+            initial_point_clouds.append(point_cloud)
             initial_poses.append(initial_pose)
 
         poses = copy.deepcopy(initial_poses)
+        point_clouds = copy.deepcopy(initial_point_clouds)
+
         for iteration_ind in range(configuration_reader.patches_iterations):
+            if configuration_reader.undistortion_segments is not None:
+                undistorted_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
+
+                undistortioner = Undistortioner(configuration_reader.undistortion_segments)
+                for undistortion_ind in range(end - start - 1):
+                    point_clouds[undistortion_ind] = undistortioner(
+                        point_clouds[undistortion_ind],
+                        poses[undistortion_ind],
+                        point_clouds[undistortion_ind + 1],
+                        poses[undistortion_ind + 1],
+                    )
+                    poses[undistortion_ind] = np.eye(4)
+
+                    undistorted_point_cloud += point_clouds[undistortion_ind].transform(poses[undistortion_ind])
+
+                #o3d.visualization.draw(undistorted_point_cloud)
+
             pipeline = SequentialPipeline(
                 point_clouds=point_clouds,
                 poses=poses,
@@ -122,7 +142,7 @@ if __name__ == "__main__":
                     o3d.utility.Vector3dVector()
                 )
                 for point_cloud, initial_pose, optimised_pose in zip(
-                    point_clouds, initial_poses, poses
+                    initial_point_clouds, initial_poses, poses
                 ):
                     color = [random.random(), random.random(), random.random()]
                     before = copy.deepcopy(point_cloud).transform(initial_pose)
@@ -139,10 +159,19 @@ if __name__ == "__main__":
                 o3d.visualization.draw(optimised_point_cloud)
 
         for optimised_pose_number in range(start, end):
-            posesWriter.write(
+            optimisationsWriter.write_pose(
                 os.path.join(
                     configuration_reader.optimisation_dir,
+                    "poses",
                     f"{optimised_pose_number}.txt",
                 ),
                 poses[optimised_pose_number - start],
+            )
+            optimisationsWriter.write_point_cloud(
+                os.path.join(
+                    configuration_reader.optimisation_dir,
+                    "clouds",
+                    f"{optimised_pose_number}.pcd",
+                ),
+                point_clouds[optimised_pose_number - start],
             )

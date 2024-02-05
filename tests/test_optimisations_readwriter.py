@@ -4,7 +4,7 @@ import pytest
 import os
 
 from slam.typing import ArrayNx4x4
-from slam.utils import OptimisedPoseReadWriter
+from slam.utils import OptimisationsReadWriter
 
 
 @pytest.mark.parametrize(
@@ -27,8 +27,8 @@ def test_correct_pose_readwriter_read(
     pose_path: str,
     expected_pose: ArrayNx4x4[float],
 ):
-    pose_readwriter = OptimisedPoseReadWriter()
-    actual_pose = pose_readwriter.read(pose_path)
+    pose_readwriter = OptimisationsReadWriter()
+    actual_pose = pose_readwriter.read_pose(pose_path)
     assert np.all(actual_pose == expected_pose)
 
 
@@ -41,9 +41,9 @@ def test_correct_pose_readwriter_read(
 def test_incorrect_pose_readwriter_read(
     pose_path: str,
 ):
-    pose_readwriter = OptimisedPoseReadWriter()
+    pose_readwriter = OptimisationsReadWriter()
     with pytest.raises(ValueError):
-        pose_readwriter.read(pose_path)
+        pose_readwriter.read_pose(pose_path)
 
 
 @pytest.mark.parametrize(
@@ -66,10 +66,10 @@ def test_correct_pose_readwriter_write(
     pose_path: str,
     pose_to_write: ArrayNx4x4[float],
 ):
-    pose_readwriter = OptimisedPoseReadWriter()
+    pose_readwriter = OptimisationsReadWriter()
     pose_readwriter.write(pose_path, pose_to_write)
 
-    actual_pose = pose_readwriter.read(pose_path)
+    actual_pose = pose_readwriter.read_pose(pose_path)
     os.remove(pose_path)
 
     assert np.all(actual_pose == pose_to_write)
@@ -92,6 +92,6 @@ def test_incorrect_pose_readwriter_write(
     pose_path: str,
     pose_to_write: ArrayNx4x4[float],
 ):
-    pose_readwriter = OptimisedPoseReadWriter()
+    pose_readwriter = OptimisationsReadWriter()
     with pytest.raises(AssertionError):
         pose_readwriter.write(pose_path, pose_to_write)
