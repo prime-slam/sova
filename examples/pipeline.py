@@ -20,6 +20,7 @@ python3 examples/pipeline.py --configuration_path examples/configurations/hilti.
 ```
 """
 import numpy as np
+import open3d
 import open3d as o3d
 from octreelib.grid import VisualizationConfig
 
@@ -43,6 +44,18 @@ from slam.utils import (
     OptimisationsReadWriter, Undistortioner,
 )
 
+
+def prepare_output_directories(configuration: YAMLConfigurationReader) -> None:
+    visualization_dir = configuration.visualization_dir
+    if not os.path.exists(visualization_dir):
+        os.makedirs(visualization_dir)
+
+    optimisation_dir = configuration.optimisation_dir
+    if not os.path.exists(optimisation_dir):
+        os.makedirs(os.path.join(optimisation_dir, "clouds"))
+        os.makedirs(os.path.join(optimisation_dir, "poses"))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
     parser.add_argument("--configuration_path", type=str, required=True)
@@ -60,6 +73,8 @@ if __name__ == "__main__":
     else:
         raise ValueError("Unrecognisable type of dataset")
     optimisationsWriter = OptimisationsReadWriter()
+
+    prepare_output_directories(configuration_reader)
 
     for ind in range(
         configuration_reader.patches_start,
@@ -92,71 +107,84 @@ if __name__ == "__main__":
         poses = copy.deepcopy(initial_poses)
         point_clouds = copy.deepcopy(initial_point_clouds)
 
-        for iteration_ind in range(configuration_reader.patches_iterations):
-            if configuration_reader.undistortion_segments is not None:
-                undistorted_point_cloud = o3d.geometry.PointCloud(o3d.utility.Vector3dVector())
+        # Beginning of pipeline iterations
+        for pipeline_iteration in range(configuration_reader.pipeline_iterations):
+            # Beginning of patch iterations
+            for patch_iteration in range(configuration_reader.patches_iterations):
+                # Undistortion section
+                if configuration_reader.undistortion_segments is not None:
+                    pc1 = open3d.geometry.PointCloud(open3d.utility.Vector3dVector())
+                    pc2 = open3d.geometry.PointCloud(open3d.utility.Vector3dVector())
 
-                undistortioner = Undistortioner(configuration_reader.undistortion_segments)
-                for undistortion_ind in range(end - start - 1):
-                    point_clouds[undistortion_ind] = undistortioner(
-                        point_clouds[undistortion_ind],
-                        poses[undistortion_ind],
-                        point_clouds[undistortion_ind + 1],
-                        poses[undistortion_ind + 1],
+                    undistortioner = Undistortioner(configuration_reader.undistortion_segments)
+                    for undistortion_ind in range(end - start - 1):
+                        point_clouds[undistortion_ind] = undistortioner(
+                            point_clouds[undistortion_ind],
+                            poses[undistortion_ind],
+                            point_clouds[undistortion_ind + 1],
+                            poses[undistortion_ind + 1],
+                        )
+                        poses[undistortion_ind] = np.eye(4)
+
+                        temp1 = point_clouds[undistortion_ind].transform(poses[undistortion_ind])
+                        temp1.paint_uniform_color([random.random(), random.random(), random.random()])
+                        pc1 += temp1
+
+                    for j in range(end - start):
+                        temp2 = initial_point_clouds[j]
+                        temp2.transform(initial_poses[j]).translate([0, 8, 0])
+                        temp2.paint_uniform_color([0, 0, 0])
+                        pc2 += temp2
+
+                    open3d.visualization.draw(pc1 + pc2)
+
+                pipeline = SequentialPipeline(
+                    point_clouds=point_clouds,
+                    poses=poses,
+                    subdividers=configuration_reader.subdividers,
+                    segmenters=configuration_reader.segmenters,
+                    filters=configuration_reader.filters,
+                    backend=configuration_reader.backend(start, end),
+                )
+
+                output = pipeline.run(
+                    SequentialPipelineRuntimeParameters(
+                        grid_configuration=configuration_reader.grid_configuration,
+                        visualization_config=VisualizationConfig(
+                            filepath=f"{configuration_reader.visualization_dir}/{start}-{end - 1}_{patch_iteration}.html"
+                        ),
+                        initial_point_cloud_number=(end - start) // 2,
                     )
-                    poses[undistortion_ind] = np.eye(4)
-
-                    undistorted_point_cloud += point_clouds[undistortion_ind].transform(poses[undistortion_ind])
-
-                #o3d.visualization.draw(undistorted_point_cloud)
-
-            pipeline = SequentialPipeline(
-                point_clouds=point_clouds,
-                poses=poses,
-                subdividers=configuration_reader.subdividers,
-                segmenters=configuration_reader.segmenters,
-                filters=configuration_reader.filters,
-                backend=configuration_reader.backend(start, end),
-            )
-
-            output = pipeline.run(
-                SequentialPipelineRuntimeParameters(
-                    grid_configuration=configuration_reader.grid_configuration,
-                    visualization_config=VisualizationConfig(
-                        filepath=f"{configuration_reader.visualization_dir}/{start}-{end - 1}_{iteration_ind}.html"
-                    ),
-                    initial_point_cloud_number=(end - start) // 2,
                 )
-            )
-            print(f"Iteration: {iteration_ind}:\n{output}")
+                print(f"Iteration: {patch_iteration}:\n{output}")
 
-            for pose_ind in range(len(initial_poses)):
-                poses[pose_ind] = output.poses[pose_ind] @ poses[pose_ind]
+                for pose_ind in range(len(initial_poses)):
+                    poses[pose_ind] = output.poses[pose_ind] @ poses[pose_ind]
 
-            if configuration_reader.debug:
-                random.seed(42)
-                initial_point_cloud = o3d.geometry.PointCloud(
-                    o3d.utility.Vector3dVector()
-                )
-                optimised_point_cloud = o3d.geometry.PointCloud(
-                    o3d.utility.Vector3dVector()
-                )
-                for point_cloud, initial_pose, optimised_pose in zip(
-                    initial_point_clouds, initial_poses, poses
-                ):
-                    color = [random.random(), random.random(), random.random()]
-                    before = copy.deepcopy(point_cloud).transform(initial_pose)
-                    before.paint_uniform_color(color)
-                    initial_point_cloud += before
+                if configuration_reader.debug:
+                    random.seed(42)
+                    initial_point_cloud = o3d.geometry.PointCloud(
+                        o3d.utility.Vector3dVector()
+                    )
+                    optimised_point_cloud = o3d.geometry.PointCloud(
+                        o3d.utility.Vector3dVector()
+                    )
+                    for point_cloud, initial_pose, optimised_pose in zip(
+                        initial_point_clouds, initial_poses, poses
+                    ):
+                        color = [random.random(), random.random(), random.random()]
+                        before = copy.deepcopy(point_cloud).transform(initial_pose)
+                        before.paint_uniform_color(color)
+                        initial_point_cloud += before
 
-                    after = copy.deepcopy(point_cloud).transform(optimised_pose)
-                    after.paint_uniform_color(color)
-                    optimised_point_cloud += after
+                        after = copy.deepcopy(point_cloud).transform(optimised_pose)
+                        after.paint_uniform_color(color)
+                        optimised_point_cloud += after
 
-                print("Initial point clouds is going to be printed")
-                o3d.visualization.draw(initial_point_cloud)
-                print("Optimised point clouds is going to be printed")
-                o3d.visualization.draw(optimised_point_cloud)
+                    print("Initial point clouds is going to be printed")
+                    o3d.visualization.draw(initial_point_cloud)
+                    print("Optimised point clouds is going to be printed")
+                    o3d.visualization.draw(optimised_point_cloud)
 
         for optimised_pose_number in range(start, end):
             optimisationsWriter.write_pose(

@@ -1,3 +1,5 @@
+import os
+
 import mrob
 from octreelib.grid import GridConfig
 
@@ -187,12 +189,13 @@ class ConfigurationReader(ABC):
             Path to visualisation directory to save
         """
         try:
-            output_configuration = copy.deepcopy(self._configuration["output"])
-            value = output_configuration["visualization_path"]
+            dataset_configuration = copy.deepcopy(self._configuration["dataset"])
+            value = dataset_configuration["output"]
+            visualization_dir = os.path.join(value, "visualization")
         except KeyError:
-            return "output/visualization"
+            visualization_dir = "output/visualization"
 
-        return value
+        return visualization_dir
 
     @property
     def optimisation_dir(self) -> str:
@@ -205,12 +208,24 @@ class ConfigurationReader(ABC):
             Path to optimisation poses directory to save
         """
         try:
-            output_configuration = copy.deepcopy(self._configuration["output"])
-            value = output_configuration["optimisation_path"]
+            dataset_configuration = copy.deepcopy(self._configuration["dataset"])
+            value = dataset_configuration["output"]
+            optimisation_dir = os.path.join(value, "optimisation")
         except KeyError:
-            return "output/optimisation"
+            optimisation_dir = "output/optimisation"
 
-        return value
+        return optimisation_dir
+
+    @property
+    def pipeline_iterations(self) -> int:
+        try:
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            iterations = pipeline_configuration["iterations"]
+            iterations = int(iterations)
+        except KeyError:
+            iterations = 1
+
+        return iterations
 
     @property
     def subdividers(self) -> List[Subdivider]:
@@ -223,9 +238,8 @@ class ConfigurationReader(ABC):
             Subdividers list
         """
         try:
-            subdividers_configuration = copy.deepcopy(
-                self._configuration["subdividers"]
-            )
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            subdividers_configuration = pipeline_configuration["subdividers"]
         except KeyError:
             raise ValueError("subdividers must be not empty")
 
@@ -265,7 +279,8 @@ class ConfigurationReader(ABC):
             Segmenters list
         """
         try:
-            segmenters_configuration = copy.deepcopy(self._configuration["segmenters"])
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            segmenters_configuration = pipeline_configuration["segmenters"]
         except KeyError:
             raise ValueError("segmenters must be not empty")
 
@@ -295,7 +310,8 @@ class ConfigurationReader(ABC):
             Grid configuration
         """
         try:
-            grid_configuration = copy.deepcopy(self._configuration["grid"])
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            grid_configuration = pipeline_configuration["grid"]
         except KeyError:
             raise ValueError("grid_configuration must be not empty")
 
@@ -318,7 +334,8 @@ class ConfigurationReader(ABC):
             Backend of pipeline
         """
         try:
-            backend_configuration = copy.deepcopy(self._configuration["backend"])
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            backend_configuration = pipeline_configuration["backend"]
         except KeyError:
             raise ValueError("backend_configuration must be not empty")
 

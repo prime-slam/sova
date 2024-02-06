@@ -35,16 +35,6 @@ class Undistortioner:
         initial_point_cloud.transform(initial_pose)
         target_point_cloud.transform(target_pose)
 
-        initial_transform = np.eye(4, 4)
-        reg_p2p = o3d.pipelines.registration.registration_icp(
-            initial_point_cloud,
-            target_point_cloud,
-            0.1,
-            initial_transform,
-            o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-            o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=20000),
-        )
-
         initial_point_cloud.transform(np.linalg.inv(initial_pose))
 
         coefficients = np.roll(coefficients, -len(coefficients) // 2)
@@ -53,7 +43,7 @@ class Undistortioner:
             segment = self._cut_segment(initial_point_cloud, sectors[i], initial_angle)
 
             transform_matrix = self._get_intermediate_transform(
-                initial_pose, reg_p2p.transformation @ initial_pose, coefficients[i - 1]
+                initial_pose, target_pose, coefficients[i - 1]
             )
 
             undistorted_point_cloud += segment.transform(transform_matrix)
@@ -67,7 +57,7 @@ class Undistortioner:
         target_pose: Array4x4[float],
         coefficient: float,
     ):
-        dxi = mrob.geometry.SE3(target_pose @ np.linalg.inv(initial_pose)).Ln()
+        dxi = mrob.geometry.SE3(initial_pose @ np.linalg.inv(target_pose)).Ln()
         return mrob.geometry.SE3(coefficient * dxi).T() @ initial_pose
 
     def _cut_segment(
