@@ -35,8 +35,6 @@ class Undistortioner:
         initial_point_cloud.transform(initial_pose)
         target_point_cloud.transform(target_pose)
 
-        initial_point_cloud.transform(np.linalg.inv(initial_pose))
-
         coefficients = np.roll(coefficients, -len(coefficients) // 2)
 
         for i in range(1, self._segments_number):
@@ -57,7 +55,7 @@ class Undistortioner:
         target_pose: Array4x4[float],
         coefficient: float,
     ):
-        dxi = mrob.geometry.SE3(initial_pose @ np.linalg.inv(target_pose)).Ln()
+        dxi = mrob.geometry.SE3(target_pose @ np.linalg.inv(initial_pose)).Ln()
         return mrob.geometry.SE3(coefficient * dxi).T() @ initial_pose
 
     def _cut_segment(
