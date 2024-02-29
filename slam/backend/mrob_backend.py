@@ -25,10 +25,7 @@ class MROBBackend(Backend):
     """
 
     def __init__(
-        self,
-        poses_number: int,
-        iterations_number: int,
-        robust_type: int = mrob.HUBER,
+        self, poses_number: int, iterations_number: int, robust_type: int = mrob.HUBER
     ) -> None:
         self._graph: mrob.FGraph = mrob.FGraph(robust_type)
         self._poses_number: int = poses_number
@@ -72,9 +69,7 @@ class MROBBackend(Backend):
         """
         self._init_poses()
         self._init_point_clouds(grid)
-        metrics = [
-            Metric(name="FGraph initial error", value=self._graph.chi2(True)),
-        ]
+        metrics = [Metric(name="FGraph initial error", value=self._graph.chi2(True))]
         converge_iterations = self._graph.solve(mrob.LM_ELLIPS, self._iterations_number)
         while converge_iterations == 0:
             print("Optimization didn't converge")
@@ -82,17 +77,11 @@ class MROBBackend(Backend):
                 mrob.LM_ELLIPS, self._iterations_number
             )
 
-        metrics.append(
-            Metric(name="Iterations to converge", value=converge_iterations),
-        )
-        metrics.append(
-            Metric(name="chi2", value=self._graph.chi2()),
-        )
+        metrics.append(Metric(name="Iterations to converge", value=converge_iterations))
+        metrics.append(Metric(name="chi2", value=self._graph.chi2()))
 
         return BackendOutput(
-            self._graph.get_estimated_state(),
-            metrics,
-            self.__get_unused_features(),
+            self._graph.get_estimated_state(), metrics, self.__get_unused_features()
         )
 
     def __get_unused_features(self) -> List[int]:
@@ -107,6 +96,7 @@ class MROBBackend(Backend):
         try:
             robust_mask = self._graph.get_eigen_factors_robust_mask()
         except AttributeError:
+            print("[WARNING] Most likely you are not using robust optimisations")
             return []
 
         unused_features = []

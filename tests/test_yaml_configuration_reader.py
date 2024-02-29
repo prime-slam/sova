@@ -14,13 +14,13 @@ from slam.subdivider import SizeSubdivider, Subdivider
 @pytest.mark.parametrize(
     "yaml_configuration_path, "
     "debug, "
+    "dataset_type, "
     "dataset_path, "
     "patches_start, "
     "patches_end, "
     "patches_step, "
     "patches_iterations, "
-    "visualization_dir, "
-    "optimisation_dir, "
+    "output_directory, "
     "subdividers, "
     "filters, "
     "segmenters, "
@@ -30,12 +30,12 @@ from slam.subdivider import SizeSubdivider, Subdivider
         (
             "tests/data/yaml_configurations/correct_configuration.yaml",
             False,
+            "dataset_type",
             "path/to/dataset",
             0,
             100,
             10,
             1,
-            "output",
             "output",
             [SizeSubdivider(size=2)],
             [],
@@ -50,13 +50,13 @@ from slam.subdivider import SizeSubdivider, Subdivider
 def test_correct_configuration(
     yaml_configuration_path: str,
     debug: bool,
+    dataset_type: bool,
     dataset_path: str,
     patches_start: int,
     patches_end: int,
     patches_step: int,
     patches_iterations: int,
-    visualization_dir: str,
-    optimisation_dir: str,
+    output_directory: str,
     subdividers: List[Subdivider],
     filters: List[Filter],
     segmenters: List[Segmenter],
@@ -71,6 +71,7 @@ def test_correct_configuration(
     assert patches_end == yaml_reader.patches_end
     assert patches_step == yaml_reader.patches_step
     assert patches_iterations == yaml_reader.patches_iterations
+    assert output_directory == yaml_reader.output_directory
     assert len(subdividers) == len(yaml_reader.subdividers)
     assert len(filters) == len(yaml_reader.filters)
     assert len(segmenters) == len(yaml_reader.segmenters)
@@ -106,6 +107,10 @@ def test_correct_configuration(
             "tests/data/yaml_configurations/incorrect_configuration_subdividers.yaml",
             "subdividers",
         ),
+        (
+            "tests/data/yaml_configurations/incorrect_configuration_dataset_type.yaml",
+            "type",
+        ),
     ],
 )
 def test_incorrect_yaml_configuration_reader(
@@ -116,13 +121,13 @@ def test_incorrect_yaml_configuration_reader(
 
     with pytest.raises(ValueError) as excinfo:
         _ = yaml_reader.debug
+        _ = yaml_reader.dataset_type
         _ = yaml_reader.dataset_path
         _ = yaml_reader.patches_start
         _ = yaml_reader.patches_end
         _ = yaml_reader.patches_step
         _ = yaml_reader.patches_iterations
-        _ = yaml_reader.visualization_dir
-        _ = yaml_reader.optimisation_dir
+        _ = yaml_reader.output_directory
         _ = yaml_reader.subdividers
         _ = yaml_reader.filters
         _ = yaml_reader.segmenters

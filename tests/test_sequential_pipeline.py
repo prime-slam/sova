@@ -16,7 +16,7 @@ from slam.typing import ArrayNx3, ArrayNx4x4
 
 
 @pytest.mark.parametrize(
-    "points," "poses," "subdividers," "filters," "segmenters," "backend,",
+    "points," "poses," "subdividers," "filters," "segmenters," "backend," "debug,",
     [
         (
             np.array(
@@ -32,6 +32,7 @@ from slam.typing import ArrayNx3, ArrayNx4x4
             EigenFactorBackend(
                 poses_number=1, iterations_number=1, robust_type=mrob.HUBER
             ),
+            False,
         ),
     ],
 )
@@ -42,6 +43,7 @@ def test_sequential_pipeline(
     filters: List[Filter],
     segmenters: List[Segmenter],
     backend: Backend,
+    debug: bool,
 ):
     sequential_pipeline = SequentialPipeline(
         point_clouds=[o3d.geometry.PointCloud(o3d.utility.Vector3dVector(points))],
@@ -50,6 +52,7 @@ def test_sequential_pipeline(
         segmenters=segmenters,
         filters=filters,
         backend=backend,
+        debug=debug,
     )
     output = sequential_pipeline.run(
         SequentialPipelineRuntimeParameters(
