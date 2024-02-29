@@ -63,6 +63,24 @@ class ConfigurationReader(ABC):
         return bool(value)
 
     @property
+    def dataset_type(self) -> str:
+        """
+        Represents dataset type for pose and clouds reading
+
+        Returns
+        -------
+        dataset_type: str
+            Dataset type
+        """
+        try:
+            dataset_configuration = copy.deepcopy(self._configuration["dataset"])
+            value = dataset_configuration["type"]
+        except KeyError as e:
+            raise ValueError(f"{e} must be set")
+
+        return value
+
+    @property
     def dataset_path(self) -> str:
         """
         Represents dataset path parameter of pipeline
@@ -157,38 +175,20 @@ class ConfigurationReader(ABC):
         return int(value)
 
     @property
-    def visualization_dir(self) -> str:
+    def output_directory(self) -> str:
         """
-        Represents visualization directory parameter of pipeline
+        Represents output directory which contains all products of voxel-based pipeline
 
         Returns
         -------
-        visualization_dir: str
-            Path to visualisation directory to save
+        output_directory: str
+            Path to output directory
         """
         try:
-            output_configuration = copy.deepcopy(self._configuration["output"])
-            value = output_configuration["visualization_path"]
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            value = pipeline_configuration["output"]
         except KeyError:
-            return "output/visualization"
-
-        return value
-
-    @property
-    def optimisation_dir(self) -> str:
-        """
-        Represents optimisation directory parameter of pipeline
-
-        Returns
-        -------
-        optimisation_dir: str
-            Path to optimisation poses directory to save
-        """
-        try:
-            output_configuration = copy.deepcopy(self._configuration["output"])
-            value = output_configuration["optimisation_path"]
-        except KeyError:
-            return "output/optimisation"
+            return "output"
 
         return value
 
@@ -203,9 +203,8 @@ class ConfigurationReader(ABC):
             Subdividers list
         """
         try:
-            subdividers_configuration = copy.deepcopy(
-                self._configuration["subdividers"]
-            )
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            subdividers_configuration = pipeline_configuration["subdividers"]
         except KeyError:
             raise ValueError("subdividers must be not empty")
 
@@ -218,9 +217,7 @@ class ConfigurationReader(ABC):
 
         for name in subdividers_configuration.keys():
             name = name.lower()
-            subdividers.append(
-                subdividers_names[name](subdividers_configuration[name]),
-            )
+            subdividers.append(subdividers_names[name](subdividers_configuration[name]))
 
         return subdividers
 
@@ -247,7 +244,8 @@ class ConfigurationReader(ABC):
             Segmenters list
         """
         try:
-            segmenters_configuration = copy.deepcopy(self._configuration["segmenters"])
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            segmenters_configuration = pipeline_configuration["segmenters"]
         except KeyError:
             raise ValueError("segmenters must be not empty")
 
@@ -277,7 +275,8 @@ class ConfigurationReader(ABC):
             Grid configuration
         """
         try:
-            grid_configuration = copy.deepcopy(self._configuration["grid"])
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            grid_configuration = pipeline_configuration["grid"]
         except KeyError:
             raise ValueError("grid_configuration must be not empty")
 
@@ -300,14 +299,12 @@ class ConfigurationReader(ABC):
             Backend of pipeline
         """
         try:
-            backend_configuration = copy.deepcopy(self._configuration["backend"])
+            pipeline_configuration = copy.deepcopy(self._configuration["pipeline"])
+            backend_configuration = pipeline_configuration["backend"]
         except KeyError:
             raise ValueError("backend_configuration must be not empty")
 
-        backend_names = {
-            "eigen_factor": EigenFactorBackend,
-            "bareg": BaregBackend,
-        }
+        backend_names = {"eigen_factor": EigenFactorBackend, "bareg": BaregBackend}
         robust_types = {
             "huber": mrob.HUBER,
             "quadratic": mrob.QUADRATIC,

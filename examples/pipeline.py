@@ -19,6 +19,8 @@ How can I run it?
 python3 examples/pipeline.py --configuration_path examples/configurations/hilti.yaml
 ```
 """
+from typing import Tuple
+
 import open3d as o3d
 from octreelib.grid import VisualizationConfig
 
@@ -42,6 +44,25 @@ from slam.utils import (
     OptimisedPoseReadWriter,
 )
 
+
+def prepare_output_directories(
+    configuration: YAMLConfigurationReader,
+) -> Tuple[str, str]:
+    if not os.path.exists(configuration.output_directory):
+        os.makedirs(configuration.output_directory)
+
+    poses_dir = os.path.join(configuration.output_directory, "poses")
+    if not os.path.exists(poses_dir):
+        os.makedirs(poses_dir)
+
+    visualization_dir = os.path.join(configuration.output_directory, "visualization")
+    if configuration.debug:
+        if not os.path.join(visualization_dir):
+            os.makedirs(visualization_dir)
+
+    return poses_dir, visualization_dir
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Pipeline")
     parser.add_argument("--configuration_path", type=str, required=True)
@@ -50,15 +71,17 @@ if __name__ == "__main__":
     configuration_reader = YAMLConfigurationReader(args.configuration_path)
 
     dataset_reader = DatasetReader
-    if "hilti" in configuration_reader.dataset_path.lower():
+    if "hilti" in configuration_reader.dataset_type.lower():
         dataset_reader = HiltiReader()
-    elif "kitti" in configuration_reader.dataset_path.lower():
+    elif "kitti" in configuration_reader.dataset_type.lower():
         dataset_reader = KittiReader()
-    elif "nuscenes" in configuration_reader.dataset_path.lower():
+    elif "nuscenes" in configuration_reader.dataset_type.lower():
         dataset_reader = NuscenesReader()
     else:
         raise ValueError("Unrecognisable type of dataset")
     posesWriter = OptimisedPoseReadWriter()
+
+    poses_dir, visualization_dir = prepare_output_directories(configuration_reader)
 
     for ind in range(
         configuration_reader.patches_start,
@@ -97,13 +120,14 @@ if __name__ == "__main__":
                 segmenters=configuration_reader.segmenters,
                 filters=configuration_reader.filters,
                 backend=configuration_reader.backend(start, end),
+                debug=configuration_reader.debug,
             )
 
             output = pipeline.run(
                 SequentialPipelineRuntimeParameters(
                     grid_configuration=configuration_reader.grid_configuration,
                     visualization_config=VisualizationConfig(
-                        filepath=f"{configuration_reader.visualization_dir}/{start}-{end - 1}_{iteration_ind}.html"
+                        filepath=f"{visualization_dir}/{start}-{end - 1}_{iteration_ind}.html"
                     ),
                     initial_point_cloud_number=(end - start) // 2,
                 )
@@ -140,9 +164,6 @@ if __name__ == "__main__":
 
         for optimised_pose_number in range(start, end):
             posesWriter.write(
-                os.path.join(
-                    configuration_reader.optimisation_dir,
-                    f"{optimised_pose_number}.txt",
-                ),
+                os.path.join(poses_dir, f"{optimised_pose_number}.txt"),
                 poses[optimised_pose_number - start],
             )

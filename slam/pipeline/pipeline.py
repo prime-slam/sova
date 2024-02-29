@@ -51,6 +51,8 @@ class Pipeline(ABC):
         Filter conditions to filter voxels in grid
     backend: Backend
         Backend of SLAM algorithm that optimises given poses
+    debug: bool
+        Represents debug parameter. If it is specified, the pipeline will save the visualization files.
     """
 
     def __init__(
@@ -61,6 +63,7 @@ class Pipeline(ABC):
         segmenters: List[Segmenter],
         filters: List[Filter],
         backend: Backend,
+        debug: bool,
     ) -> None:
         if len(point_clouds) != len(poses):
             raise ValueError("Sizes of point_cloud and poses arrays must be equal")
@@ -71,6 +74,7 @@ class Pipeline(ABC):
         self._segmenters: List[Segmenter] = segmenters
         self._filters: List[Filter] = filters
         self._backend: Backend = backend
+        self._debug: bool = debug
 
     @abstractmethod
     def run(self, parameters: PipelineRuntimeParameters) -> BackendOutput:
