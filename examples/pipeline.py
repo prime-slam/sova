@@ -46,7 +46,7 @@ from slam.utils import (
 
 
 def prepare_output_directories(
-    configuration: YAMLConfigurationReader
+    configuration: YAMLConfigurationReader,
 ) -> Tuple[str, str]:
     if not os.path.exists(configuration.output_directory):
         os.makedirs(configuration.output_directory)
