@@ -45,7 +45,9 @@ from slam.utils import (
 )
 
 
-def prepare_output_directories(configuration: YAMLConfigurationReader) -> Tuple[str, str]:
+def prepare_output_directories(
+    configuration: YAMLConfigurationReader
+) -> Tuple[str, str]:
     if not os.path.exists(configuration.output_directory):
         os.makedirs(configuration.output_directory)
 
@@ -162,9 +164,6 @@ if __name__ == "__main__":
 
         for optimised_pose_number in range(start, end):
             posesWriter.write(
-                os.path.join(
-                    poses_dir,
-                    f"{optimised_pose_number}.txt",
-                ),
+                os.path.join(poses_dir, f"{optimised_pose_number}.txt"),
                 poses[optimised_pose_number - start],
             )
