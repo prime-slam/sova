@@ -7,12 +7,9 @@
     python3 -m venv venv && source venv/bin/activate
     pip install -r requirements.txt
     ```
-2. Install `octreelib` with CUDA RANSAC support with or without **processing in batches**
+2. Install `octreelib` with CUDA RANSAC support with processing in batches
     ```bash
-    # with processing in batches
-    pip install git+https://github.com/prime-slam/octreelib@cuda-ransac-processing-in-batches
-    # without processing in batches
-    pip install git+https://github.com/prime-slam/octreelib@cuda-ransac
+    pip install git+https://github.com/prime-slam/octreelib@cuda-ransac-processing-in-batches --force-reinstall
     ```
 3. Run the example
     ```bash

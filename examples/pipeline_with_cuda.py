@@ -1,21 +1,20 @@
 import sys
-from typing import List, Dict
+from typing import List
 import numpy as np
 import open3d as o3d
 
 sys.path.append("..")
 from slam.utils import KittiReader
 
-from octreelib.grid import Grid, GridConfig, VisualizationConfig
+from octreelib.grid import VisualizationConfig
 from octreelib.grid import GridVisualizationType
-from octreelib.grid.grid import CUDA_RANSAC_BATCH_SIZE_POSES
 
-from util import create_configuration, evaluate, PipelineDurations, PipelineConfiguration, read_patch
+from util import create_configuration, PipelineConfiguration, read_patch
 
 print('imports done')
 
 N_POSES = 30
-CUDA_RANSAC_BATCH_SIZE_POSES = 10
+CUDA_RANSAC_BATCH_SIZE = 10
 dataset_path = "../evaluation/kitti"
 
 
@@ -39,10 +38,8 @@ def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
 
     # Run RANSAC
     print('ransac start')
-    # ransac = CudaRansac(n_blocks=pipeline.grid.sum_of_leaves(), n_threads_per_block=1024)
     if cuda:
-        pipeline.grid.map_leaf_points_cuda()
-        # pipeline.grid.map_leaf_points_cuda(ransac)
+        pipeline.grid.map_leaf_points_cuda(n_poses_per_batch=CUDA_RANSAC_BATCH_SIZE)
     else:
         for segmenter in pipeline.segmenters:
             pipeline.grid.map_leaf_points(segmenter)
@@ -52,10 +49,7 @@ def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
     print('visualization saved to ./visualization.html')
 
 
-def measure(cuda, start, end) -> Dict[str, float]:
-    point_clouds = read_patch(KittiReader, dataset_path, start, end)
+if __name__ == "__main__":
+    point_clouds = read_patch(KittiReader, dataset_path, start=0, end=N_POSES)
 
-    run_pipeline(point_clouds, create_configuration(), cuda)
-
-
-measure(True, 0, 5)
+    run_pipeline(point_clouds, create_configuration(), cuda=True)
