@@ -1,61 +1,25 @@
-<img align="left" width="200" height="200" src="assets/logo.svg">
-Voxel-slam repository is an open-source Python library designed for fast 
-and adaptive comparison of different approaches to solving the voxel-based planar SLAM problem.
+# Running `octreelib` with CUDA RANSAC
 
-Our main goal is to provide extendable, simple and efficient interfaces for
-testing various hypotheses, which include different subdivision/segmenter/backend criteria.
-
-[![Linters](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml/badge.svg)](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-- - -
-# Installation
-
-To use this library you need to download this repository and install necessary dependencies.
-How to do this:
-
-1. Download and install Python 3.10 from the [official website](https://www.python.org/downloads/).
-2. Clone this repository
+1. Clone the repository and install the requirements
     ```bash
-    git clone https://github.com/prime-slam/voxel-slam.git
-    ```
-3. Create and activate virtual environment
-    ```bash
+    git clone https://github.com/true-real-michael/voxel-slam.git
+    cd voxel-slam
     python3 -m venv venv && source venv/bin/activate
-    ```
-4. Install dependencies
-    ```bash
     pip install -r requirements.txt
     ```
-    If you want to use `MROBBackend` type, you have to install mrob library manually:
-    1. Download [wheels](https://github.com/prime-slam/mrob/actions/runs/6841598615) from source
-    2. Install mrob from wheels
+2. Install `octreelib` with CUDA RANSAC support with or without **processing in batches**
     ```bash
-    pip3 install mrob --find-links=... --force-reinstall
+    # with processing in batches
+    pip install git+https://github.com/prime-slam/octreelib@cuda-ransac-processing-in-batches
+    # without processing in batches
+    pip install git+https://github.com/prime-slam/octreelib@cuda-ransac
+    ```
+3. Run the example
+    ```bash
+    python examples/pipeline_with_cuda.py
     ```
 
-Now you have everything you need to run your voxel-based pipeline.
 
-# Examples
 
-Examples of using the voxel-based pipeline are presented in the [`examples`](https://github.com/prime-slam/voxel-slam/tree/main/examples) 
-directory with the all necessary instructions of how to run them.
 
-# Contributing
-
-To contribute to the project you must:
-1. Get to know the project structure:
-    ```
-    slam
-    ├── backend
-    ├── filter
-    ├── pipeline
-    ├── segmenter
-    ├── subdivider
-    ├── typing
-    └── utils
-        ├── dataset_reader
-    ```
-2. Implement new subdivision/segmenter/backend approach which satisfy the relevant interface.
-3. Create PullRequest to the repository.
-4. Go through the review and wait for your code to appear in the main branch.
+- - -
