@@ -13,7 +13,8 @@
     ```
 3. Run the example
     ```bash
-    python examples/pipeline_with_cuda.py
+    cd examples
+    python pipeline_with_cuda.py
     ```
 
 

@@ -1,7 +1,6 @@
 import sys
-import time
 import os
-from typing import List, Dict
+from typing import List
 from dataclasses import dataclass
 import numpy as np
 import open3d as o3d
@@ -13,7 +12,6 @@ from slam.subdivider import Subdivider, SizeSubdivider
 from slam.utils import DatasetReader
 
 from octreelib.grid import Grid, GridConfig
-
 
 
 def evaluate(timestamps: List[float]):
@@ -50,7 +48,6 @@ def read_patch(reader: DatasetReader, path: str, start: int, end: int) -> List[o
         point_clouds.append(point_cloud.transform(pose))
 
     return point_clouds
-
 
 
 @dataclass

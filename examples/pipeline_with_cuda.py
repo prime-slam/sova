@@ -1,18 +1,18 @@
 import sys
 from typing import List
+
 import numpy as np
 import open3d as o3d
-
-sys.path.append("..")
-from slam.utils import KittiReader
-
 from octreelib.grid import VisualizationConfig
 from octreelib.grid import GridVisualizationType
 
+sys.path.append("..")
+from slam.utils import KittiReader
 from util import create_configuration, PipelineConfiguration, read_patch
 
-print('imports done')
-
+# these are the parameters that you can change
+# N_POSES cannot be larger than 100
+# in this example (N_POSES = 30, CUDA_RANSAC_BATCH_SIZE = 10) the data is processed in batches of 10 poses
 N_POSES = 30
 CUDA_RANSAC_BATCH_SIZE = 10
 dataset_path = "../evaluation/kitti"
