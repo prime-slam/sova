@@ -10,11 +10,9 @@ sys.path.append("..")
 from slam.backend import EigenFactorBackend, Backend
 from slam.segmenter import Segmenter, RansacSegmenter
 from slam.subdivider import Subdivider, SizeSubdivider
-from slam.utils import DatasetReader, KittiReader
+from slam.utils import DatasetReader
 
-from octreelib.grid import Grid, GridConfig, VisualizationConfig
-from octreelib.grid import GridVisualizationType, CUDA_RANSAC_BATCH_SIZE_POSES
-from octreelib.ransac.cuda_ransac import CudaRansac
+from octreelib.grid import Grid, GridConfig
 
 
 
