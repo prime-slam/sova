@@ -36,9 +36,13 @@ def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
             continue
         pipeline.grid.insert_points(pose_number, np.asarray(point_cloud.points))
 
+    # By this point the grid is set up and subdivided into voxels with points in them.
+    # We can run RANSAC for each voxel to filter out outliers
+
     # Run RANSAC
     print('ransac start')
     if cuda:
+        # Here is the most important part for this example
         pipeline.grid.map_leaf_points_cuda(n_poses_per_batch=CUDA_RANSAC_BATCH_SIZE)
     else:
         for segmenter in pipeline.segmenters:
