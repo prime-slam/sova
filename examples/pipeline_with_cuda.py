@@ -49,7 +49,7 @@ def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
             pipeline.grid.map_leaf_points(segmenter)
     print('ransac done')
 
-    pipeline.grid.visualize(VisualizationConfig(type=GridVisualizationType.VOXEL))
+    # pipeline.grid.visualize(VisualizationConfig(type=GridVisualizationType.VOXEL))
     print('visualization saved to ./visualization.html')
 
 
