@@ -59,8 +59,7 @@ class SequentialPipeline(Pipeline):
                 continue
             grid.insert_points(pose_number, np.asarray(point_cloud.points))
 
-        for segmenter in self._segmenters:
-            grid.map_leaf_points(segmenter)
+        grid.map_leaf_points_cuda_ransac()
 
         grid.filter(self._filters)
 

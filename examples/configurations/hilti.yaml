@@ -1,11 +1,11 @@
 dataset:
   type: "hilti"
-  path: "evaluation/hilti"
+  path: "datasets/hilti/Drone"
   patches:
     start: 0
-    end: 29
-    step: 10
-    iterations: 1
+    end: 895
+    step: 50
+    iterations: 2
 pipeline:
   grid:
     voxel_edge_length: 8
@@ -21,5 +21,5 @@ pipeline:
     parameters:
       iterations_number: 5000
       robust_type: QUADRATIC
-  output: "output/hilti"
+  output: "output/hilti/Drone"
 debug: false
