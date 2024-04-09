@@ -1,3 +1,8 @@
+"""
+Using this file you can create visualization of processed
+clouds with CUDA RANSAC.
+"""
+
 import sys
 from typing import List
 
@@ -10,12 +15,10 @@ sys.path.append("..")
 from slam.utils import KittiReader
 from util import create_configuration, PipelineConfiguration, read_patch
 
-# these are the parameters that you can change
-# N_POSES cannot be larger than 100
-# in this example (N_POSES = 30, CUDA_RANSAC_BATCH_SIZE = 10) the data is processed in batches of 10 poses
-N_POSES = 3
-CUDA_RANSAC_BATCH_SIZE = 10
-dataset_path = "../evaluation/kitti"
+N_POSES = 3  # cannot be larger than 100
+
+DATASET_PATH = "../evaluation/kitti"
+DATASET_READER = KittiReader
 
 
 def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
@@ -54,6 +57,6 @@ def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
 
 
 if __name__ == "__main__":
-    point_clouds = read_patch(KittiReader, dataset_path, start=0, end=N_POSES)
+    point_clouds = read_patch(DATASET_READER, DATASET_PATH, start=0, end=N_POSES)
 
     run_pipeline(point_clouds, create_configuration(), cuda=True)
