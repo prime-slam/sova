@@ -13,7 +13,7 @@ from util import create_configuration, PipelineConfiguration, read_patch
 # these are the parameters that you can change
 # N_POSES cannot be larger than 100
 # in this example (N_POSES = 30, CUDA_RANSAC_BATCH_SIZE = 10) the data is processed in batches of 10 poses
-N_POSES = 30
+N_POSES = 3
 CUDA_RANSAC_BATCH_SIZE = 10
 dataset_path = "../evaluation/kitti"
 
@@ -43,13 +43,13 @@ def run_pipeline(point_clouds: List[o3d.geometry.PointCloud],
     print('ransac start')
     if cuda:
         # Here is the most important part for this example
-        pipeline.grid.map_leaf_points_cuda(n_poses_per_batch=CUDA_RANSAC_BATCH_SIZE)
+        pipeline.grid.map_leaf_points_cuda_ransac()
     else:
         for segmenter in pipeline.segmenters:
             pipeline.grid.map_leaf_points(segmenter)
     print('ransac done')
 
-    # pipeline.grid.visualize(VisualizationConfig(type=GridVisualizationType.VOXEL))
+    pipeline.grid.visualize(VisualizationConfig(type=GridVisualizationType.VOXEL))
     print('visualization saved to ./visualization.html')
 
 
