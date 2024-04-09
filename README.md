@@ -7,13 +7,14 @@
     python3 -m venv venv && source venv/bin/activate
     pip install -r requirements.txt
     ```
-3. Run the example
-    ```bash
-    cd examples
-    python pipeline_with_cuda.py
-    ```
-
-
-
-
-- - -
+2.
+    1. Run the example to get visualization file
+       ```bash
+       cd examples
+       python pipeline_with_cuda.py
+       ```
+    2. Run the example to benchmark the performance
+       ```bash
+       cd examples
+       python benchmark.py
+       ```
