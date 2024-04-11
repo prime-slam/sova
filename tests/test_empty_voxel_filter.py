@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from slam.filter import EmptyVoxel
-from slam.typing import ArrayNx3
+from sova.filter import EmptyVoxel
+from sova.typing import ArrayNx3
 
 
 @pytest.mark.parametrize(

@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from slam.subdivider import SizeSubdivider
-from slam.typing import ArrayNx3
+from sova.subdivider import SizeSubdivider
+from sova.typing import ArrayNx3
 
 
 @pytest.mark.parametrize(

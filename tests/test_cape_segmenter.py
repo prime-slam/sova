@@ -3,8 +3,8 @@ import pytest
 
 import random
 
-from slam.segmenter import CAPESegmenter
-from slam.typing import ArrayNx3
+from sova.segmenter import CAPESegmenter
+from sova.typing import ArrayNx3
 
 
 @pytest.mark.parametrize(

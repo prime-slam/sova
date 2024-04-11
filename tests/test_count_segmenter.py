@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from slam.segmenter import CountSegmenter
-from slam.typing import ArrayNx3
+from sova.segmenter import CountSegmenter
+from sova.typing import ArrayNx3
 
 
 @pytest.mark.parametrize(

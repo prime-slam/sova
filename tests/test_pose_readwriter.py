@@ -3,8 +3,8 @@ import pytest
 
 import os
 
-from slam.typing import ArrayNx4x4
-from slam.utils import OptimisedPoseReadWriter
+from sova.typing import ArrayNx4x4
+from sova.utils import OptimisedPoseReadWriter
 
 
 @pytest.mark.parametrize(

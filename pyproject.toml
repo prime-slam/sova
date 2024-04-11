@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "voxel-slam"
+name = "sova"
 version = "0.0.0"
-description = "Library for voxel-based SLAM alignment"
+description = "SLAM on Voxel Alignment"
 authors = [
   "Pavel Mokeev <pav3l.mokeev@gmail.com>"
 ]
