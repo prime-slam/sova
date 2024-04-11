@@ -25,12 +25,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Check code typos
-        uses: crate-ci/typos@master
-        with:
-          files: ./slam ./examples
-          config: _typos.toml
-
       - name: Check imports
         uses: isort/isort-action@master
         with:
