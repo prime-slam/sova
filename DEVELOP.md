@@ -14,7 +14,7 @@ To do this, you must first publish it on https://test.pypi.org
    After this GitHubActions will automatically build pip package and push it to test PyPi registry
 3. Ensure, that installed pip package from https://test.pypi.org works properly
    ```commandline
-    pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple voxel-slam==<tagname>
+    pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple sova==<tagname>
     ```
 4. Publish pip package manually on production PyPi using the following steps:
    - Go to Actions page
