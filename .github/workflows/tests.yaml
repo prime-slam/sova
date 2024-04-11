@@ -71,9 +71,10 @@ jobs:
         run: |
           python -m pytest tests/
 
+
   publish-package:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    needs: lints-and-tests
+    needs: [lint, tests]
 
     strategy:
       matrix:
