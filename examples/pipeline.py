@@ -31,12 +31,12 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.pipeline import (
+from sova.pipeline import (
     SequentialPipeline,
     SequentialPipelineRuntimeParameters,
     YAMLConfigurationReader,
 )
-from slam.utils import (
+from sova.utils import (
     DatasetReader,
     HiltiReader,
     KittiReader,

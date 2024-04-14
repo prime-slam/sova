@@ -3,8 +3,8 @@ import pytest
 
 import random
 
-from slam.subdivider import EigenValueSubdivider
-from slam.typing import ArrayNx3
+from sova.subdivider import EigenValueSubdivider
+from sova.typing import ArrayNx3
 
 
 @pytest.mark.parametrize(

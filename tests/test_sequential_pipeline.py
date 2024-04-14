@@ -7,12 +7,12 @@ from octreelib.grid import GridConfig, VisualizationConfig
 import os
 from typing import List
 
-from slam.backend import Backend, EigenFactorBackend
-from slam.filter import Filter
-from slam.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
-from slam.segmenter import CountSegmenter, Segmenter
-from slam.subdivider import CountSubdivider, Subdivider
-from slam.typing import ArrayNx3, ArrayNx4x4
+from sova.backend import Backend, EigenFactorBackend
+from sova.filter import Filter
+from sova.pipeline import SequentialPipeline, SequentialPipelineRuntimeParameters
+from sova.segmenter import CountSegmenter, Segmenter
+from sova.subdivider import CountSubdivider, Subdivider
+from sova.typing import ArrayNx3, ArrayNx4x4
 
 
 @pytest.mark.parametrize(

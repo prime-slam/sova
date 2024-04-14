@@ -4,11 +4,11 @@ from octreelib.grid import GridConfig
 
 from typing import List
 
-from slam.backend import Backend, EigenFactorBackend
-from slam.filter import Filter
-from slam.pipeline import YAMLConfigurationReader
-from slam.segmenter import RansacSegmenter, Segmenter
-from slam.subdivider import SizeSubdivider, Subdivider
+from sova.backend import Backend, EigenFactorBackend
+from sova.filter import Filter
+from sova.pipeline import YAMLConfigurationReader
+from sova.segmenter import RansacSegmenter, Segmenter
+from sova.subdivider import SizeSubdivider, Subdivider
 
 
 @pytest.mark.parametrize(

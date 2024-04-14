@@ -38,9 +38,9 @@ import random
 import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from slam.segmenter import RansacSegmenter
-from slam.subdivider import SizeSubdivider
-from slam.utils import HiltiReader, KittiReader, NuscenesReader, Reader
+from sova.segmenter import RansacSegmenter
+from sova.subdivider import SizeSubdivider
+from sova.utils import HiltiReader, KittiReader, NuscenesReader, Reader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="Segmentation")
