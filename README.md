@@ -5,7 +5,7 @@ and adaptive comparison of different approaches to solving the voxel-based plana
 Our main goal is to provide extendable, simple and efficient interfaces for
 testing various voxel SLAM hypotheses, which include different subdivision/segmenter/backend criteria.
 
-[![Linters](https://github.com/prime-slam/sova/actions/workflows/lint.yaml/badge.svg)](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml)
+[![Tests](https://github.com/prime-slam/sova/actions/workflows/tests.yaml/badge.svg)](https://github.com/prime-slam/sova/actions/workflows/tests.yaml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 - - -
