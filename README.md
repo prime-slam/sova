@@ -1,9 +1,9 @@
-<img align="left" width="10%" height="10%" src="assets/logo.png">
+<img src="assets/logo.png">
 SOVA is a SLAM on Voxel Alignment and an open-source Python library, designed for fast 
 and adaptive comparison of different approaches to solving the voxel-based planar SLAM problem.
 
 Our main goal is to provide extendable, simple and efficient interfaces for
-testing various hypotheses, which include different subdivision/segmenter/backend criteria.
+testing various voxel SLAM hypotheses, which include different subdivision/segmenter/backend criteria.
 
 [![Linters](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml/badge.svg)](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -11,8 +11,7 @@ testing various hypotheses, which include different subdivision/segmenter/backen
 - - -
 # Installation
 
-To use this library you need to download this repository and install necessary dependencies.
-How to do this:
+To use this library you need to:
 
 1. Download and install Python 3.10 from the [official website](https://www.python.org/downloads/).
 2. Install pip package:
@@ -20,7 +19,7 @@ How to do this:
    pip install sova
    ```
    If you want to use `MROBBackend` robust optimisations, you have to install mrob library manually:
-   1. Download [wheels](https://drive.google.com/file/d/1rUdbybNvHx80ykr62aceAcBIPtlntWIz/view?usp=sharing) from source
+   1. Download [wheels from source](https://drive.google.com/file/d/1rUdbybNvHx80ykr62aceAcBIPtlntWIz/view?usp=sharing)
    2. Install mrob from wheels
    ```bash
    python -m pip install mrob --no-index --find-links ... --force-reinstall
