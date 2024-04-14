@@ -5,7 +5,7 @@ and adaptive comparison of different approaches to solving the voxel-based plana
 Our main goal is to provide extendable, simple and efficient interfaces for
 testing various voxel SLAM hypotheses, which include different subdivision/segmenter/backend criteria.
 
-[![Linters](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml/badge.svg)](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml)
+[![Linters](https://github.com/prime-slam/sova/actions/workflows/lint.yaml/badge.svg)](https://github.com/prime-slam/voxel-slam/actions/workflows/lint.yaml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 - - -
@@ -29,7 +29,7 @@ Now you have everything you need to run your voxel-based pipeline.
 
 # Examples
 
-Examples of using the voxel-based pipeline are presented in the [`examples`](https://github.com/prime-slam/voxel-slam/tree/main/examples) 
+Examples of using the voxel-based pipeline are presented in the [`examples`](https://github.com/prime-slam/sova/tree/main/examples) 
 directory with the all necessary instructions of how to run them.
 
 # Contributing

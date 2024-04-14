@@ -8,7 +8,7 @@ authors = [
 license = "APACHE"
 readme = "README.md"
 homepage = "https://github.com/prime-slam/"
-repository = "https://github.com/prime-slam/voxel-slam"
+repository = "https://github.com/prime-slam/sova"
 classifiers = [
   "License :: OSI Approved :: Apache Software License",
   "Intended Audience :: Developers",
