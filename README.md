@@ -19,7 +19,7 @@ To use this library you need to:
    pip install sova
    ```
    If you want to use `MROBBackend` robust optimisations, you have to install mrob library manually:
-   1. Download [wheel from source](https://drive.google.com/file/d/1rUdbybNvHx80ykr62aceAcBIPtlntWIz/view?usp=sharing)
+   1. Download [wheel from source](https://drive.google.com/file/d/1EV6zuhYUTEwCgXr8i_kysAxgNvMivd2w/view?usp=sharing)
    2. Install mrob from wheels
    ```bash
    python -m pip install mrob --no-index --find-links wheel/ --force-reinstall
