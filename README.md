@@ -30,7 +30,7 @@ Now you have everything you need to run your voxel-based pipeline.
 # Examples
 
 Examples of using the voxel-based pipeline are presented in the [`examples`](https://github.com/prime-slam/sova/tree/main/examples) 
-directory with the all necessary instructions of how to run them.
+directory with the all necessary instructions of how to run them (check also README.md).
 
 # Contributing
 
